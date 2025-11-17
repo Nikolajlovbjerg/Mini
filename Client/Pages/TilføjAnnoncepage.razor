@@ -78,7 +78,7 @@
     {
         // Tilføj annonce til listen
         annoncer.Add(aAnnonce);
-        await http.PostAsJsonAsync("http://localhost:5044/api/annoncer", annoncer);
+        await http.PostAsJsonAsync("http://localhost:5044/api/annoncer", aAnnonce);
         annoncer = new(); // clear fields in form
         Nav.NavigateTo("annoncer");
         // Ryd formular
