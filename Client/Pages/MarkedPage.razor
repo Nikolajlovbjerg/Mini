@@ -1,10 +1,25 @@
-﻿@page "/marked"
-@inject NavigationManager NavMan
+﻿@inject NavigationManager NavMan
 @using Core
-@using Client.Components
+@using Client.Components;
 
 <h3>MarkedPage</h3>
 
+@if (Annonce.Count == 0)
+{
+    <p>No products added yet.</p>
+}
+else
+{
+    <div class="d-flex flex-wrap">
+        @foreach (var a in Annonce)
+        {
+            <ProductCard Product="a"/>
+
+        }
+    </div>
+}
+
 @code {
-    // Her kan du tilføje C# kode
+    private List<Annonce> Annonce = new();
+
 }
