@@ -1,33 +1,47 @@
 ﻿@page "/indkøb"
+@using Core;
 
 <h3>MineKøbPage</h3>
 
 <p>Valgt status: <strong>@Status</strong></p>
 
-<button class="btn btn-success mb-3" @onclick="AddTilListe">Tilføj</button>
-<button class="btn btn-danger mb-3" @onclick="Afvis">Afvis</button>
+<button class="btn btn-success mb-3" @onclick=""> Tilføj </button>
+<button class="btn btn-success mb-3" @onclick=""> Afvis </button>
+
+
+
 
 @foreach (var item in MineKøb)
 {
-    <div class="card m-2 p-3 shadow-sm border rounded" 
-         style="width: 240px; display:inline-block;">
-        <h5>Status: @item</h5>
-    </div>    
+	<div class="card m-2 p-3 shadow-sm border rounded" 
+	     style="width: 240px; display:inline-block;">
+		<h5>Status: @item</h5>
+	</div>	
 }
 
 @code {
-    private string Status = "pending";
-    public List<string> MineKøb = new List<string>();
+	
+	private string Status = ""; // Status er en string
 
-    public void AddTilListe()
-    {
-        Status = "godkendt"; // eller hent fra input
-        MineKøb.Add(Status);
-    }
+	public void sætStatus()
+	{
+		Status = "true";
+	}
+	
+	public List<Anmodning> MineKøb = new List<Anmodning>();  //Listen består af string
 
-    public void Afvis()
-    {
-        Status = "afvist";
-        MineKøb.Add(Status);
-    }
+	public void AddTilListe()
+	{
+		if (Status == "true")
+		{
+			MineKøb.Add;	
+		}
+	else
+		{
+			//Gør intet
+		}
+	}
+
 }
+
+
