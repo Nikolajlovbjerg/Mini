@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 
-.PASSWORD.cs
+Mini/Server/PASSWORD.cs
 .idea/
 .env
 
