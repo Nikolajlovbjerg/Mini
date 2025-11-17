@@ -8,8 +8,24 @@
 
 <h3>MarkedPage</h3>
 
-@code {
-    
-   
+@if (Annonce.Count == 0)
+{
+    <p>No products added yet.</p>
 }
+else
+{
+    <div class="d-flex flex-wrap">
+        @foreach (var a in Annonce)
+        {
+            <ProductCard Product="a"/>
+
+        }
+    </div>
+}
+
+@code {
+    private List<Annonce> Annonce = new();
+    
+}
+
 
