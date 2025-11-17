@@ -1,17 +1,35 @@
 ﻿@page "/annoncer"
 @inject NavigationManager Nav
 @using Client.Components
+@using Core;
+
 
 <h3>Mine annoncer</h3>
-
+@if (annoncer.Count == 0 )
+{
+	<p>No products</p>
+}
+else
+{
+	<div class="d-flex flex-wrap">
+		@foreach(var p in annoncer)
+		{
+			<AnnonceCard Annonce="p"/>
+		}
+	</div>
+}
 <button class="btn btn-primary" @onclick="GoToTilføjAnnoncePage"> 
 	Opret Ny Annonce
 </button>
 
 @code {
+
+	private List<Annonce> annoncer = new();
+
 	void GoToTilføjAnnoncePage()
 	{
 		Nav.NavigateTo("/add-annonce");
 	}
+
 
 }
