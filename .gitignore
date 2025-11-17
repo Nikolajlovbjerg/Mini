@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 
-.PASSWORD
+PASSWORD.cs
 .idea/
 .env
 
