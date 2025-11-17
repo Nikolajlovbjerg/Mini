@@ -12,6 +12,8 @@ public class Anonnce
     
     public double Price { get; set; }
     
+    public string Category { get; set; }
+    
     public string Status { get; set; }
     
     public int SælgerId { get; set; }
