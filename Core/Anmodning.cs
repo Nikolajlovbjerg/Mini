@@ -9,4 +9,6 @@ public class Anmodning
     public DateTime Date { get; set; }
     
     public string Status { get; set; }
+    
+    public string BilledeUrl { get; set; }
 }

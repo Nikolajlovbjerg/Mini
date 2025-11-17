@@ -38,6 +38,10 @@
         <p><strong>Bruger ID:</strong> @item.BrugerId</p>
         <p><strong>Status tekst:</strong> @item.Status</p>
         <p><strong>Dato:</strong> @item.Date.ToString("g")</p>
+        @if (!string.IsNullOrEmpty(item.BilledeUrl))
+        {
+            <img src="@item.BilledeUrl" alt="Billede" style="width:100%; height:auto; margin-top:5px;" />
+        }
     </div>
 }
 
