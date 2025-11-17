@@ -1,6 +1,6 @@
 namespace Core;
 
-public class Anonnce
+public class Annonce
 {
     public int AnonnceId { get; set; }
     
