@@ -13,6 +13,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="PW1\" />
+      <Folder Include="PW3\" />
+      <Folder Include="PW4\" />
+      <Folder Include="PW5\" />
       <Folder Include="Repository\" />
     </ItemGroup>
 
