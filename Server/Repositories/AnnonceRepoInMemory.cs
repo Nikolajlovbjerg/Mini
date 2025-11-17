@@ -7,7 +7,10 @@ namespace Server.Repositories
 {
     public class AnnonceRepoInMemory : IAnnonceRepo
     {
-        private static Annonce[] annoncer = { };
+        private static Annonce[] annoncer =
+        {
+            new Annonce {Title = "Hej", Category = "Elektronik", Price = 345, Description = "jkasjdkad"}
+        };
 
         private static List<Annonce> mAnonncer = annoncer.ToList();
             
