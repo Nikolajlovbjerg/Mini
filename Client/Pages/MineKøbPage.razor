@@ -1,7 +1,34 @@
 ﻿@page "/indkøb"
+@using Core;
 
 <h3>MineKøbPage</h3>
 
+
+
+<button class="btn btn-success mb-3" @onclick="AddTilListe">+ add input </button>
+
+
+
+@foreach (var item in MineKøb)
+{
+	
+}
+
 @code {
+	public List<Anmodning> MineKøb = new List<Anmodning>(); 
+
+	public void AddTilListe()
+	{
+		if (new var status == true)
+		{
+			MineKøb.List.Add;	
+		}
+	else
+		{
+			return null;
+		}
+	}
 
 }
+
+
