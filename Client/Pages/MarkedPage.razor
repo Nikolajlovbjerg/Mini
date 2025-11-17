@@ -5,21 +5,22 @@
 
 <h3>MarkedPage</h3>
 
-@if (Anonnce.Count == 0)
+@if (Annonce.Count == 0)
 {
     <p>No products added yet.</p>
 }
 else
 {
     <div class="d-flex flex-wrap">
-        @foreach (var a in Anonnce)
+        @foreach (var a in Annonce)
         {
-            <ProductCard Product="a" />
-                         
+            <ProductCard Product="a"/>
+
         }
     </div>
-    
+}
+
 @code {
-    private List<Anonnce> Anonnce = new();
+    private List<Annonce> Annonce = new();
     
 }
