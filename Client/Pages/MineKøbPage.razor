@@ -5,43 +5,74 @@
 
 <p>Valgt status: <strong>@Status</strong></p>
 
-<button class="btn btn-success mb-3" @onclick=""> Tilføj </button>
-<button class="btn btn-success mb-3" @onclick=""> Afvis </button>
+<!-- INPUT FELTER BUNDET TIL NyAnmodning -->
+<div class="mb-3">
+    <label>Anmodning ID</label>
+    <input class="form-control" type="number" @bind="NyAnmodning.AnmodningId" />
+</div>
 
+<div class="mb-3">
+    <label>Bruger ID</label>
+    <input class="form-control" type="number" @bind="NyAnmodning.BrugerId" />
+</div>
 
+<div class="mb-3">
+    <label>Status Tekst</label>
+    <input class="form-control" type="text" @bind="NyAnmodning.Status" />
+</div>
 
+<!-- STATUS-KNAPPER -->
+<button class="btn btn-success mb-3" @onclick="SætStatus">Accepter</button>
+<button class="btn btn-danger mb-3" @onclick="Afvist">Afvis</button>
 
+<!-- TILFØJ-KNAP -->
+<button class="btn btn-primary mb-3" @onclick="AddTilListe">Tilføj til liste</button>
+
+<hr />
+
+<!-- KORT VISNING -->
 @foreach (var item in MineKøb)
 {
-	<div class="card m-2 p-3 shadow-sm border rounded" 
-	     style="width: 240px; display:inline-block;">
-		<h5>Status: @item</h5>
-	</div>	
+    <div class="card m-2 p-3 shadow-sm border rounded" style="width: 260px; display:inline-block;">
+        <h5>Anmodning ID: @item.AnmodningId</h5>
+        <p><strong>Bruger ID:</strong> @item.BrugerId</p>
+        <p><strong>Status tekst:</strong> @item.Status</p>
+        <p><strong>Dato:</strong> @item.Date.ToString("g")</p>
+    </div>
 }
 
 @code {
-	
-	private string Status = ""; // Status er en string
 
-	public void sætStatus()
-	{
-		Status = "true";
-	}
-	
-	public List<Anmodning> MineKøb = new List<Anmodning>();  //Listen består af string
+    // Objekt der bliver udfyldt af inputfelterne
+    private Anmodning NyAnmodning = new();
 
-	public void AddTilListe()
-	{
-		if (Status == "true")
-		{
-			MineKøb.Add;	
-		}
-	else
-		{
-			//Gør intet
-		}
-	}
+    // Status (string)
+    private string Status = "";
 
-}
+    // Lister af Anmodning
+    public List<Anmodning> MineKøb = new();
+
+    // Status-knapper
+    void SætStatus() => Status = "true";
+    void Afvist() => Status = "false";
+
+    // Tilføj kun hvis status == "true"
+    void AddTilListe()
+    {
+        if (Status == "true")
+        {
+            MineKøb.Add(new Anmodning
+            {
+                AnmodningId = NyAnmodning.AnmodningId,
+                BrugerId = NyAnmodning.BrugerId,
+                Status = NyAnmodning.Status,
+                Date = DateTime.Now
+            });
+
+            NyAnmodning = new(); // Ryd felter
+        }
+        Afvist();
+    }
+} 
 
 
