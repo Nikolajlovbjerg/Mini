@@ -10,9 +10,14 @@
 *.userosscache
 *.sln.docstates
 
-PASSWORD.cs
+PW1/
+PW2/
+PW3/
+PW4/
+PW5/
 .idea/
 .env
+.DS_Store
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
