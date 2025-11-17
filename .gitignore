@@ -10,7 +10,11 @@
 *.userosscache
 *.sln.docstates
 
-/Server/PASSWORD.cs
+PW1/
+PW2/
+PW3/
+PW4/
+PD5/
 .idea/
 .env
 .DS_Store
