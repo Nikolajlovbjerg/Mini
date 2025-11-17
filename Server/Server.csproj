@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="PW1\" />
       <Folder Include="PW2\" />
       <Folder Include="PW3\" />
       <Folder Include="PW4\" />
