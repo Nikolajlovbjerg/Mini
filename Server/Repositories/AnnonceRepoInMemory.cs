@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using Core;
+using Server.PW1;
+
 namespace Server.Repositories
 {
     public class AnnonceRepoInMemory : IAnnonceRepo
@@ -8,6 +11,16 @@ namespace Server.Repositories
 
         private static List<Annonce> mAnonncer = annoncer.ToList();
             
+        public void test()
+        {
+            PASSWORD pw = new PASSWORD();
+
+            if (PASSWORD.tal == 4)
+            {
+                Console.WriteLine("amonng us");
+            }
+        }
+
 
         public void add(Annonce annonce)
         {
