@@ -1,5 +1,24 @@
-﻿<h3>TilføjAnnoncepage</h3>
+﻿@page "/add-annonce"
+<h3>TilføjAnnoncepage</h3>
+@if (visAnnonce)
+{
+	<div class="modal-backdrop"></div>
+
+	<div class="modal-window">
+	<div class="modal_content p-4">
+			<h3>Annonce modal vindue!</h3>
+
+			<button class="btn btn-secondary" @onclick="lukAnnonce">Luk</button>
+	</div>
+
+	</div>
+	
+}
 
 @code {
-
+	private bool visAnnonce = true;
+	void lukAnnonce()
+	{
+		visAnnonce = false;
+	}
 }

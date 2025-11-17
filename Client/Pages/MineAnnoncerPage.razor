@@ -1,7 +1,18 @@
 ﻿@page "/annoncer"
+@using Client.Components
 
 <h3>MineAnnoncerPage</h3>
 
+<button class="btn btn-primary" @onclick="GoToTilføjAnnoncePage"> 
+	Opret Ny Annonce
+</button>
+
 @code {
+	[Inject]
+	private NavigationManager Nav { get; set; }
+	void GoToTilføjAnnoncePage()
+	{
+		Nav.NavigateTo("/add-annonce");
+	}
 
 }
