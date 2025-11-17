@@ -4,13 +4,13 @@
      style="width: 260px; min-height: 420px;">
     
     <div class="flex-grow-1">
-        <h4 class="mt-4">@Anonnce.Title</h4>
-        <p><strong>Pris:</strong> @Anonnce.Price kr.</p>
-        <p class="description">@Anonnce.Description</p>
+        <h4 class="mt-4">@Annonce.Title</h4>
+        <p><strong>Pris:</strong> @Annonce.Price kr.</p>
+        <p class="description">@Annonce.Description</p>
     </div>
     
     <div class="mt-auto pt-2 border-top">
-        <p><strong>Kategori:</strong> @Anonnce.Category</p>
+        <p><strong>Kategori:</strong> @Annonce.Category</p>
         
     </div>
 </div>
@@ -18,5 +18,5 @@
 
 @code {
     [Parameter]
-    public Anonnce Anonnce { get; set; }
+    public Annonce Annonce { get; set; }
 }
