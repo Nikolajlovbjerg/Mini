@@ -76,20 +76,20 @@
 
     private async Task HandleSubmit()
     {
-        // Tilføj annonce til listen
-        annoncer.Add(aAnnonce);
-        await http.PostAsJsonAsync("http://localhost:5044/api/annoncer", annoncer);
-        annoncer = new(); // clear fields in form
-        Nav.NavigateTo("annoncer");
-        // Ryd formular
+        aAnnonce.BrugerId = brugerId;
+        aAnnonce.SælgerId = brugerId;
+
+        await http.PostAsJsonAsync("http://localhost:5044/api/annoncer", aAnnonce);
+
+        Nav.NavigateTo("/annoncer");
+
         aAnnonce = new Annonce
-            {
-                Anmodninger = new List<Anmodning>(),
-                Status = "Aktiv",
-                BrugerId = brugerId,
-                SælgerId = brugerId
-            };
-         
+        {
+            Anmodninger = new List<Anmodning>(),
+            Status = "Aktiv",
+            BrugerId = brugerId,
+            SælgerId = brugerId
+        };
     }
 
         public void GoToAnnoncer()
