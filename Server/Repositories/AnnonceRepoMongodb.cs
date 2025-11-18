@@ -1,42 +1,43 @@
 ﻿using MongoDB.Driver;
 using Core;
+using System.Collections.Generic;
+using Server.PW1;
 
 namespace Server.Repositories
 {
     public class AnnonceRepoMongodb : IAnnonceRepo
     {
-        private readonly IMongoCollection<Annonce> _collection;
+        private readonly IMongoCollection<Annonce> annonceCollection;
 
         public AnnonceRepoMongodb()
         {
-            // Hardcoded
-            string connectionString = "mongodb://localhost:27017";
-            string databaseName = "AnnonceDB";
-            string collectionName = "Annonce";
+           
+        
+            var mongoUri = $"mongodb+srv://tobiaskring111_db_user:{PASSWORD.superHemligPassword}@dbtest.adqud16.mongodb.net/";
+            var client = new MongoClient(mongoUri);
 
-            var client = new MongoClient(connectionString);
-            var database = client.GetDatabase(databaseName);
-            _collection = database.GetCollection<Annonce>(collectionName);
+            var db = client.GetDatabase("Genbrug");
+            annonceCollection = db.GetCollection<Annonce>("Annonce");
+        
         }
 
         public void add(Annonce annonce)
         {
-            if (annonce.AnonnceId == 0)
+            if (annonce != null)
             {
-                annonce.AnonnceId = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
+                annonceCollection.InsertOne(annonce);
             }
-
-            _collection.InsertOne(annonce);
         }
 
-        public void delete(int id)
+
+        public void delete(string id)
         {
-            _collection.DeleteOne(a => a.AnonnceId == id);
+            var filter = Builders<Annonce>.Filter.Eq(a => a.Id, id);
+            annonceCollection.DeleteOne(filter);
         }
-
         public Annonce[] GetAll()
         {
-            return _collection.Find(_ => true).ToList().ToArray();
+            return annonceCollection.Find(_ => true).ToList().ToArray();
         }
     }
 }
