@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using Core;
+using Server.PW1;
 
 namespace Server.Repositories.TEST;
 
@@ -9,9 +10,10 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
 
     public AnnonceRepositoryMongoDb()
     {
-        var client = new MongoClient("mongodb://localhost:27017");
-        var database = client.GetDatabase("genbrug");
-        aAnnonce = database.GetCollection<Annonce>("annonce");
+        var mongoUri = $"mongodb+srv://tobiaskring111_db_user:{PASSWORD.superHemligPassword}@dbtest.adqud16.mongodb.net/";
+        var client = new MongoClient(mongoUri);
+        var database = client.GetDatabase("Genbrug");
+        aAnnonce = database.GetCollection<Annonce>("Annonce");
     }
 
     public List<Annonce> GetAll()
