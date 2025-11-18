@@ -28,20 +28,8 @@ namespace Server.Controllers
             if (annonce == null)
                 return BadRequest("Annonce er null");
 
-            try
-            {
-                var lastAnnonce = AnnonceRepo.GetAll()
-                                    .OrderByDescending(a => a.AnonnceId)
-                                    .FirstOrDefault();
-                annonce.AnonnceId = (lastAnnonce?.AnonnceId ?? 0) + 1;
-
-                AnnonceRepo.Add(annonce);
-                return Ok(annonce);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            AnnonceRepo.Add(annonce);
+            return Ok(annonce);
         }
 
     }

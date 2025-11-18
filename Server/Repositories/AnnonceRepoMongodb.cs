@@ -18,17 +18,20 @@ namespace Server.Repositories
 
             var db = client.GetDatabase("Genbrug");
             annonceCollection = db.GetCollection<Annonce>("Annonce");
-        
+
+            var collections = db.ListCollectionNames().ToList();
+            Console.WriteLine("Collections: " + string.Join(", ", collections));
+
         }
 
         public void Add(Annonce annonce)
         {
             var lastAnnonce = annonceCollection
                 .Find(FilterDefinition<Annonce>.Empty)
-                .SortByDescending(a => a.AnonnceId)
+                .SortByDescending(a => a.AnnonceId)
                 .FirstOrDefault();
 
-            annonce.AnonnceId = (lastAnnonce?.AnonnceId ?? 0) + 1;
+            annonce.AnnonceId = (lastAnnonce?.AnnonceId ?? 0) + 1;
 
             annonceCollection.InsertOne(annonce);
         }

@@ -61,12 +61,26 @@
     private string[] Category = { "A", "B", "C" };
     private string[] Status = { "Aktiv" };
 
-    Annonce _Annonce = new();
+    private Annonce _Annonce = new Annonce
+    {
+        BrugerId = 1,                  // midlertidig bruger-id
+        SælgerId = 1,                  // midlertidig sælger-id
+        Status = "Aktiv",              // default status
+        Anmodninger = new List<Anmodning>(), // tom liste
+        LocationId = 1                  // default location
+    };
 
     public async Task HandleValidSubmit()
     {
         await annonceService.Add(_Annonce);
-        _Annonce = new();
+        _Annonce = new Annonce
+        {
+            BrugerId = 1,
+            SælgerId = 1,
+            Status = "Aktiv",
+            Anmodninger = new List<Anmodning>(),
+            LocationId = 1
+        };
         Nav.NavigateTo("/annoncer");
     }
 }
