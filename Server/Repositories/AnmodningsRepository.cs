@@ -1,25 +1,31 @@
+using MongoDB.Driver;
 using Core;
-
-namespace Server.Repositories;
+using Server.Repositories;
 
 public class AnmodningsRepository
 {
-    private static List<Anmodning> _data = new();
+    private readonly IMongoCollection<Anmodning> _collection;
 
-    public List<Anmodning> GetByAnnonceId(int annonceId)
+    public AnmodningsRepository(MongoDb db)
     {
-        return _data.Where(a => a.AnnonceId == annonceId).ToList();
+        _collection = db.Anmodninger; // collection-navnet matcher MongoDB
     }
 
-    public void Add(Anmodning a)
+    public async Task Create(Anmodning a)
     {
-        _data.Add(a);
+        await _collection.InsertOneAsync(a);
     }
 
-    public void UpdateStatus(int id, string status)
+    public async Task<List<Anmodning>> GetByAnnonceId(int annonceId)
     {
-        var req = _data.FirstOrDefault(x => x.AnmodningId == id);
-        if (req != null)
-            req.Status = status;
+        return await _collection
+            .Find(a => a.AnnonceId == annonceId)
+            .ToListAsync();
+    }
+
+    public async Task UpdateStatus(int id, string status)
+    {
+        var update = Builders<Anmodning>.Update.Set(a => a.Status, status);
+        await _collection.UpdateOneAsync(a => a.AnmodningId == id, update);
     }
 }

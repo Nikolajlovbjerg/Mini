@@ -1,11 +1,52 @@
 @page "/marked"
-@inject NavigationManager NavMan
+@inject HttpClient http
 @using Core
-@using Client.Components;
 
 <h3>MarkedPage</h3>
 
+<div class="d-flex flex-wrap">
+    @foreach(var annonce in annoncer)
+    {
+        <div class="card m-2 p-3 shadow-sm border rounded" style="width: 260px; min-height: 200px;">
+            <h4>@annonce.Title</h4>
+            <p><strong>Pris:</strong> @annonce.Price kr.</p>
+            <p>@annonce.Description</p>
+
+            <button class="btn btn-primary w-100 mt-2" @onclick="() => SendAnmodning(annonce)">
+                Anmod om køb
+            </button>
+        </div>
+    }
+</div>
+
+<h4 class="mt-4">Mine anmodninger</h4>
+<ul>
+    @foreach(var a in mineAnmodninger)
+    {
+        <li>@a.AnnonceId - @a.Status - @a.Date</li>
+    }
+</ul>
 
 @code {
-    
+    private List<Annonce> annoncer = new();
+    private List<Anmodning> mineAnmodninger = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        annoncer = await http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annoncer");
+    }
+
+    private async Task SendAnmodning(Annonce annonce)
+    {
+        var req = new Anmodning
+        {
+            BrugerId = 1,
+            AnnonceId = annonce.AnnonceId,
+            Date = DateTime.UtcNow,
+            Status = "pending"
+        };
+
+        await http.PostAsJsonAsync("http://localhost:5044/api/anmodning", req);
+        mineAnmodninger.Add(req); // opdater UI
+    }
 }

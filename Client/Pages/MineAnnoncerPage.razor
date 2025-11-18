@@ -8,35 +8,37 @@
 <h3>Mine annoncer</h3>
 @if (annoncer.Count == 0 )
 {
-	<p>No products</p>
+    <p>No products</p>
 }
 else
 {
-	<div class="d-flex flex-wrap">
-		@foreach(var p in annoncer)
-		{
-			<AnnonceCard Annonce="p"/>
-		}
-	</div>
+    <div class="d-flex flex-wrap">
+        @foreach(var p in annoncer)
+        {
+            <AnnonceCard Annonce="p"/>
+        }
+    </div>
 }
 <button class="btn btn-primary" @onclick="GoToTilføjAnnoncePage"> 
-	Opret Ny Annonce
+    Opret Ny Annonce
 </button>
+
 
 @code {
 
-	private List<Annonce> annoncer = new();
+    private List<Annonce> annoncer = new();
 
-	protected override async Task OnInitializedAsync()
-	{
-		//without services:
-		annoncer = await http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annoncer");
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        //without services:
+        annoncer = await http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annoncer");
+    }
 	
-	void GoToTilføjAnnoncePage()
-	{
-		Nav.NavigateTo("/add-annonce");
-	}
-
-
+    void GoToTilføjAnnoncePage()
+    {
+        foreach (var a in annoncer)
+            Console.WriteLine($"AnnonceId={a.AnnonceId}, Title={a.Title}");
+        Nav.NavigateTo("/add-annonce");
+        
+    }
 }

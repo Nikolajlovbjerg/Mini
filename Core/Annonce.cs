@@ -2,7 +2,7 @@ namespace Core;
 
 public class Annonce
 {
-    public int AnonnceId { get; set; }
+    public int AnnonceId { get; set; }
     
     public int BrugerId { get; set; }
     

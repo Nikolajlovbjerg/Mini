@@ -13,16 +13,6 @@ namespace Server.Repositories
         };
 
         private static List<Annonce> mAnonncer = annoncer.ToList();
-            
-        public void test()
-        {
-            PASSWORD pw = new PASSWORD();
-
-            if (PASSWORD.tal == 4)
-            {
-                Console.WriteLine("amonng us");
-            }
-        }
 
 
         public void add(Annonce annonce)
@@ -32,7 +22,7 @@ namespace Server.Repositories
 
         public void delete(int id)
         {
-            mAnonncer.RemoveAll(a => a.AnonnceId == id);
+            mAnonncer.RemoveAll(a => a.AnnonceId == id);
         }
 
         public Annonce[] GetAll()

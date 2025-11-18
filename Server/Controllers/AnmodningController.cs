@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Core;
 using Server.Repositories;
 
-namespace Server.Controllers;
-
 [ApiController]
 [Route("api/anmodning")]
 public class AnmodningController : ControllerBase
@@ -16,24 +14,23 @@ public class AnmodningController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Nyt([FromBody] Anmodning a)
+    public async Task<IActionResult> Nyt([FromBody] Anmodning a)
     {
-        a.AnmodningId = new Random().Next(100000); // midlertidigt
-        _repo.Add(a);
+        await _repo.Create(a); // gemmer i MongoDB
         return Ok(a);
     }
 
     [HttpPut("{id}/accept")]
-    public IActionResult Accept(int id)
+    public async Task<IActionResult> Accept(int id)
     {
-        _repo.UpdateStatus(id, "accepted");
+        await _repo.UpdateStatus(id, "accepted");
         return Ok();
     }
 
     [HttpPut("{id}/reject")]
-    public IActionResult Reject(int id)
+    public async Task<IActionResult> Reject(int id)
     {
-        _repo.UpdateStatus(id, "rejected");
+        await _repo.UpdateStatus(id, "rejected");
         return Ok();
     }
 }
