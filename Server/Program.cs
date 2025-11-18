@@ -1,10 +1,11 @@
 using Microsoft.Extensions.Options;
 using Server.Repositories;
+using Server.Repositories.TEST;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<IAnnonceRepo, AnnonceRepoInMemory>();
+builder.Services.AddSingleton<IAnnonceRepository, AnnonceRepositoryMongoDb>();
 builder.Services.AddSingleton<IBrugerRepo, BrugerRepo>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
