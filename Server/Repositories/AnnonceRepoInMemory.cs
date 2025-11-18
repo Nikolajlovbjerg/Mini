@@ -14,7 +14,6 @@ namespace Server.Repositories
 
         private static List<Annonce> mAnonncer = annoncer.ToList();
 
-
         public void add(Annonce annonce)
         {
             mAnonncer.Add(annonce);

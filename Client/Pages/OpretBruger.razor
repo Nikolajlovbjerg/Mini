@@ -1,0 +1,55 @@
+﻿@page "/addbruger"
+@using Client.Service
+@using Core
+@inject HttpClient http
+@inject NavigationManager navMan
+@inject IBrugerService brugerService
+
+<PageTitle>Add User</PageTitle>
+
+<h3>Add User</h3>
+
+<EditForm Model="@_bruger" class="row p-3" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="col-md-12 mb-3">
+        <label for="Name">Name</label>
+        <InputText id="Name" @bind-Value="_bruger.Name" class="form-control" />
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Email">Email</label>
+        <InputText id="Email" @bind-Value="_bruger.Email" class="form-control" />
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="Password">Password</label>
+        <InputText id="Password" @bind-Value="_bruger.Password" class="form-control" />
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Phone">Phone</label>
+        <InputText id="Phone" @bind-Value="_bruger.Phone" class="form-control" />
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <label for="Adress">Adress</label>
+        <InputText id="Adress" @bind-Value="_bruger.Address" class="form-control" />
+    </div>
+
+    <div class="col-12 mb-3">
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</EditForm>
+
+
+@code {
+    Bruger _bruger = new();
+    
+    public async Task HandleValidSubmit()
+    {
+        // await http.PostAsJsonAsync("", _bike);
+        await brugerService.Add(_bruger);
+        _bruger = new(); // clear fields in form
+        navMan.NavigateTo("bruger");
+
+    }
+
+}
