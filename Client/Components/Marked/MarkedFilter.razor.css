@@ -41,7 +41,7 @@
 
 
 .category.active .icon-wrap {
-    background: rgba(68, 214, 27, 0.06);
+    background: rgba(68, 214, 27, 0.12);
     box-shadow: 0 4px 10px rgba(68, 214, 27, 0.10);
 }
 
