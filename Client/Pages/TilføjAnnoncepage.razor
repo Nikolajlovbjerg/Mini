@@ -1,33 +1,35 @@
 ﻿@page "/add-annonce"
 @inject NavigationManager Nav
 @using Core
+@using Client.Service
 @inject HttpClient http
+@inject IAnnonceService annonceService
 
 <h1 class="mb-3 mt-3">Tilføj annonce</h1>
 
-<EditForm Model="@aAnnonce" OnValidSubmit="@HandleSubmit" class="row p-3">
+<EditForm Model="@_Annonce" OnValidSubmit="@HandleValidSubmit" class="row p-3">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
     <div class="col-md-12 mb-3">
         <label for="Title">Titel</label>
-        <InputText id="Title" @bind-Value="aAnnonce.Title" class="form-control" />
+        <InputText id="Title" @bind-Value="_Annonce.Title" class="form-control" />
     </div>
 
     <div class="col-md-12 mb-3">
         <label for="Description">Beskrivelse</label>
-        <InputTextArea id="Description" @bind-Value="aAnnonce.Description" class="form-control" />
+        <InputTextArea id="Description" @bind-Value="_Annonce.Description" class="form-control" />
     </div>
 
     <div class="col-md-6 mb-3">
         <label for="Price">Pris</label>
-        <InputNumber id="Price" @bind-Value="aAnnonce.Price" class="form-control" />
+        <InputNumber id="Price" @bind-Value="_Annonce.Price" class="form-control" />
     </div>
 
     <div class="col-md-6 mb-3">
         <label for="Category">Kategori</label>
-        <InputSelect id="Category" @bind-Value="aAnnonce.Category" class="form-control">
-            @foreach (var c in categories)
+        <InputSelect id="Category" @bind-Value="_Annonce.Category" class="form-control">
+            @foreach (var c in Category)
             {
                 <option value="@c">@c</option>
             }
@@ -36,8 +38,8 @@
 
     <div class="col-md-6 mb-3">
         <label for="Status">Status</label>
-        <InputSelect id="Status" @bind-Value="aAnnonce.Status" class="form-control">
-            @foreach (var s in statuses)
+        <InputSelect id="Status" @bind-Value="_Annonce.Status" class="form-control">
+            @foreach (var s in Status)
             {
                 <option value="@s">@s</option>
             }
@@ -46,55 +48,25 @@
 
     <div class="col-md-6 mb-3">
         <label for="LocationId">Location ID</label>
-        <InputNumber id="LocationId" @bind-Value="aAnnonce.LocationId" class="form-control" />
+        <InputNumber id="LocationId" @bind-Value="_Annonce.LocationId" class="form-control" />
     </div>
 
     <div class="col-12 mb-3">
         <button type="submit" class="btn btn-primary">Tilføj annonce</button>
     </div>
-    <div class="col-12 mb-3">
-    <button class="btn btn-primary" @onclick="GoToAnnoncer">
-        Gå tilbage til Mine annoncer
-    </button>
-    </div>
+    
 </EditForm>
 
 @code {
-    private List<Annonce> annoncer = new();
+    private string[] Category = { "A", "B", "C" };
+    private string[] Status = { "Aktiv" };
 
-    private string[] categories = new[] { "Elektronik", "Møbler", "Tøj", "Andet" };
-    private string[] statuses = new[] { "Aktiv"};
+    Annonce _Annonce = new();
 
-    private Annonce aAnnonce = new()
+    public async Task HandleValidSubmit()
     {
-        Anmodninger = new List<Anmodning>(),
-        Status = "Aktiv"
-    };
-
-    private int brugerId = 1; // midlertidig bruger, indtil login implementeres
-
-
-    private async Task HandleSubmit()
-    {
-        aAnnonce.BrugerId = brugerId;
-        aAnnonce.SælgerId = brugerId;
-
-        await http.PostAsJsonAsync("http://localhost:5044/api/annoncer", aAnnonce);
-
+        await annonceService.Add(_Annonce);
+        _Annonce = new();
         Nav.NavigateTo("/annoncer");
-
-        aAnnonce = new Annonce
-        {
-            Anmodninger = new List<Anmodning>(),
-            Status = "Aktiv",
-            BrugerId = brugerId,
-            SælgerId = brugerId
-        };
     }
-
-        public void GoToAnnoncer()
-        {
-            Nav.NavigateTo("/annoncer");
-        }
-
-    }
+}

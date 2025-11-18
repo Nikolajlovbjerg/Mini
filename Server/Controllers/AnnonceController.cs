@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Server.Repositories;
 using Core;
-using ZstdSharp.Unsafe;
-
 
 namespace Server.Controllers
 {
@@ -10,7 +8,7 @@ namespace Server.Controllers
     [Route("api/annoncer")]
     public class AnnonceController : ControllerBase
     {
-        private IAnnonceRepo AnnonceRepo;
+        private readonly IAnnonceRepo AnnonceRepo;
 
         public AnnonceController(IAnnonceRepo AnnonceRepo)
         {
@@ -18,19 +16,33 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Annonce> Get()
+        public IActionResult Get()
         {
-            return AnnonceRepo.GetAll();
+            var annoncer = AnnonceRepo.GetAll();
+            return Ok(annoncer);
         }
+
         [HttpPost]
-        public void Add(Annonce annonce) { 
-        AnnonceRepo.add(annonce);
+        public IActionResult Add([FromBody] Annonce annonce)
+        {
+            if (annonce == null)
+                return BadRequest("Annonce er null");
+
+            try
+            {
+                var lastAnnonce = AnnonceRepo.GetAll()
+                                    .OrderByDescending(a => a.AnonnceId)
+                                    .FirstOrDefault();
+                annonce.AnonnceId = (lastAnnonce?.AnonnceId ?? 0) + 1;
+
+                AnnonceRepo.Add(annonce);
+                return Ok(annonce);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-        
-        [HttpDelete]
-        [Route("delete/{id:int}")]
-        public void Delete(int id) {
-            AnnonceRepo.delete(id);
-        }
+
     }
 }

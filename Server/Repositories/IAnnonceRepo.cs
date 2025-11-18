@@ -3,8 +3,8 @@ namespace Server.Repositories
 {
     public interface IAnnonceRepo
     {
-        Annonce[] GetAll();
-        void add (Annonce annonce);
-        void delete (int id);
+        List<Annonce> GetAll();
+        void Add (Annonce annonce);
+        //void Delete (int id);
     }
 }

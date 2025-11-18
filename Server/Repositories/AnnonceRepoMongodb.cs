@@ -21,23 +21,26 @@ namespace Server.Repositories
         
         }
 
-        public void add(Annonce annonce)
+        public void Add(Annonce annonce)
         {
-            if (annonce != null)
-            {
-                annonceCollection.InsertOne(annonce);
-            }
+            var lastAnnonce = annonceCollection
+                .Find(FilterDefinition<Annonce>.Empty)
+                .SortByDescending(a => a.AnonnceId)
+                .FirstOrDefault();
+
+            annonce.AnonnceId = (lastAnnonce?.AnonnceId ?? 0) + 1;
+
+            annonceCollection.InsertOne(annonce);
         }
 
 
-        public void delete(string id)
+        //public void Delete(int id)
+        //{
+        //    annonceCollection.DeleteOne(a => a.AnonnceId == id);
+        //}
+        public List<Annonce> GetAll()
         {
-            var filter = Builders<Annonce>.Filter.Eq(a => a.Id, id);
-            annonceCollection.DeleteOne(filter);
-        }
-        public Annonce[] GetAll()
-        {
-            return annonceCollection.Find(_ => true).ToList().ToArray();
+            return annonceCollection.Find(_  => true).ToList();
         }
     }
 }
