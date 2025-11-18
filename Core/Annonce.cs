@@ -1,7 +1,11 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace Core;
 
 public class Annonce
 {
+    [BsonId]
     public int AnonnceId { get; set; }
     
     public int BrugerId { get; set; }
