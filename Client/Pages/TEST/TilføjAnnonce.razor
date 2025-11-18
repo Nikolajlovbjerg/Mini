@@ -27,6 +27,16 @@
             }
         </InputSelect>
     </div>
+    
+    <div class="col-md-6 mb-3">
+        <label for="Price">Location</label>
+        <InputSelect id="Location" @bind-Value="annonce.Location" class="form-control">
+            @foreach (var l in locations)
+            {
+                <option value="@l">@l</option>
+            }
+        </InputSelect>
+    </div>
 
     <div class="col-md-12 mb-3">
         <label for="Description">Description</label>
@@ -44,10 +54,11 @@
 
     private List<Annonce> annoncer = new();
     
-    private Annonce annonce = new();          // single user bound to the form
-    private string errorText = "";      // show any error
+    private Annonce annonce = new();          
+    private string errorText = "";      
 
-    private string[] catagories = { "hej", "hej2" };
+    private string[] catagories = { "--Vælg en kategori--", "Elektronik", "Bil", "Møbler", "Tøj", "Kunst", "Have" };
+    private string[] locations = { "--Vælg et lokale--", "SH-A1.06", "SH-A1.02" };
     
     protected override async Task OnInitializedAsync()
     {
