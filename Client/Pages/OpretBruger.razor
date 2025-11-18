@@ -45,10 +45,10 @@
     
     public async Task HandleValidSubmit()
     {
-        // await http.PostAsJsonAsync("http://localhost:5217/api/bike", _bike);
+        // await http.PostAsJsonAsync("", _bike);
         await brugerService.Add(_bruger);
         _bruger = new(); // clear fields in form
-        navMan.NavigateTo("bike");
+        navMan.NavigateTo("bruger");
 
     }
 
