@@ -18,7 +18,7 @@ public class Annonce
     
     public int SælgerId { get; set; }
     
-    public int LocationId { get; set; }
+    public string Location { get; set; }
     
     public List<Anmodning> Anmodninger { get; set; }
 }

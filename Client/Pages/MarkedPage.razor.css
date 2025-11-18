@@ -1,0 +1,162 @@
+:root{
+    --accent: #1b3bd6; /* dba-blå-lignende */
+    --card-radius: 12px;
+}
+
+/* Container og søgebjælke */
+.hero {
+    padding: 48px 0 24px;
+    text-align: center;
+}
+.search-wrap {
+    display:flex;
+    justify-content:center;
+    margin-bottom: 22px;
+}
+.searchbox {
+    width: 100%;
+    max-width: 880px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border-radius: 10px;
+    border: 1px solid #e6e6e6;
+    padding: 10px 14px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+    background: #fff;
+}
+.searchbox input {
+    border:0;
+    outline:0;
+    font-size: 16px;
+    width:100%;
+}
+.searchbox .search-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 20px;
+}
+
+/* Kategorien (ikoner + label) */
+.categories {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 18px;
+    max-width: 980px;
+    margin: 10px auto 40px;
+    align-items:center;
+}
+.category {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    color: #222;
+    font-size: 13px;
+    text-align:center;
+}
+.category .icon-wrap {
+    width:46px;
+    height:46px;
+    border-radius: 50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: rgba(27,59,214,0.06);
+    color: var(--accent);
+}
+.category svg { width:20px; height:20px; }
+
+/* Populære annoncer grid */
+.ads-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+    gap: 18px;
+    max-width: 1160px;
+    margin: 0 auto 72px;
+}
+
+.ad-card {
+    border-radius: var(--card-radius);
+    overflow:hidden;
+    background:#fff;
+    box-shadow: 0 6px 18px rgba(19,22,33,0.06);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    min-height: 420px;
+}
+
+.ad-media {
+    position:relative;
+    height: 220px;
+    background:#f3f3f3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.ad-media img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* Pris badge */
+.price-badge {
+    position:absolute;
+    left:12px;
+    bottom:12px;
+    background: rgba(0,0,0,0.78);
+    color:#fff;
+    padding:8px 12px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:16px;
+}
+
+/* Favorit-hjerte */
+.fav-btn {
+    position:absolute;
+    right:12px;
+    top:12px;
+    background:#fff;
+    border-radius:50%;
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    cursor:pointer;
+    color: var(--accent);
+}
+
+.ad-body {
+    padding: 14px 16px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    flex-grow:1;
+}
+.ad-meta {
+    font-size:12px;
+    color:#6b6b6b;
+}
+.ad-title {
+    font-weight:600;
+    font-size:16px;
+    margin:2px 0 0;
+}
+
+.ad-footer {
+    padding: 12px 16px;
+    border-top:1px solid #f0f0f0;
+    font-size:13px;
+    color:#555;
+    background:#fff;
+}
+
+/* små responsive tweaks */
+@media (max-width:760px){
+    .categories { grid-template-columns: repeat(3,1fr); gap:10px; }
+    .searchbox { padding:8px 10px; }
+    .ad-media { height:200px; }
+}
