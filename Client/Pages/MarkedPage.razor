@@ -1,7 +1,7 @@
 @page "/marked"
 @inject NavigationManager NavMan
 @using Core
-@using Client.Components;
+@using Client.Components.Marked;
 
 
 <div class="container-xl">
@@ -18,7 +18,7 @@
       </div>
     </div>
     
-    <div class="categories" role="navigation" aria-label="Kategorier">
+    @*<div class="categories" role="navigation" aria-label="Kategorier">
       <div class="category">
         <div class="icon-wrap">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M4 5V16H20V5H4ZM2 4.00748C2 3.45107 2.45531 3 2.9918 3H21.0082C21.556 3 22 3.44892 22 4.00748V18H2V4.00748ZM1 19H23V21H1V19Z"></path></svg>
@@ -51,7 +51,9 @@
         <div>Have</div>
       </div>
       
-    </div>
+    </div>*@
+    
+    <MarkedFilter Selected="@SelectedCategory" SelectedChanged="OnCategoryChanged" />
   </header>
 
   
@@ -73,6 +75,16 @@
 
 @code {
     private string search = "";
+    private string SelectedCategory { get; set; } = "Alle";
+    
+    IEnumerable<Annonce> FilteredAnnoncer => SelectedCategory == "Alle"
+      ? Annoncer
+      : Annoncer.Where(a => string.Equals(a.Category, SelectedCategory, StringComparison.OrdinalIgnoreCase));
+
+    private void OnCategoryChanged(string cat)
+    {
+      SelectedCategory = cat;
+    }
     
     private List<Annonce> Annoncer = new()
     {
@@ -81,6 +93,7 @@
         AnonnceId = 1,
         Title = "GO PRIS FOR HURTIG HANDEL. 2 IKEA Småstad...",
         Description = "Kort beskrivelse — stand, mål eller andet.",
+        ImageUrl = "https://m.media-amazon.com/images/I/91TjRnsruRL._AC_UF350,350_QL80_.jpg",
         Price = 800,
         Category = "Møbler",
         Status = "Aktiv",
@@ -93,6 +106,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",
@@ -105,6 +119,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",
@@ -117,6 +132,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",
@@ -129,6 +145,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",
@@ -141,6 +158,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",
@@ -153,6 +171,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",
@@ -165,6 +184,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",
@@ -177,6 +197,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",
@@ -189,6 +210,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",
@@ -201,6 +223,7 @@
         AnonnceId = 2,
         Title = "Komplet sort stålskorssten rør og tilbehør",
         Description = "Kort beskrivelse.",
+        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
         Price = 5300,
         Category = "Have",
         Status = "Aktiv",

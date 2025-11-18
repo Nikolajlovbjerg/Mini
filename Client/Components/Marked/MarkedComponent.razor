@@ -2,7 +2,7 @@
 
 <article class="ad-card">
     <div class="ad-media">
-        <img src="@ImageUrl" alt="Annonce billede" />
+        <img src="@Annonce.ImageUrl" alt="Annonce billede" />
         <div class="price-badge">@Annonce.Price kr.</div>
     </div>
 
@@ -21,8 +21,5 @@
 </article>
 @code {
     [Parameter] public Annonce Annonce { get; set; }
-
-    // midlertidigt placeholder-billede (tilføj billedefelt senere)
-    [Parameter] public string ImageUrl { get; set; } = "https://via.placeholder.com/600x400";
     
 }

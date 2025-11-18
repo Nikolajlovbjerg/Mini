@@ -16,6 +16,8 @@ public class Annonce
     
     public string Status { get; set; }
     
+    public string ImageUrl { get; set; } = "https://via.placeholder.com/600x400";
+    
     public int SælgerId { get; set; }
     
     public string Location { get; set; }

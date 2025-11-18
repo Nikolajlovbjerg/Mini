@@ -39,7 +39,7 @@
     font-size: 20px;
 }
 
-/* Kategorien (ikoner + label) */
+/*!* Kategorien (ikoner + label) *!
 .categories {
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -67,7 +67,7 @@
     background: rgba(27,59,214,0.06);
     color: var(--accent);
 }
-.category svg { width:20px; height:20px; }
+.category svg { width:20px; height:20px; }*/
 
 /* Populære annoncer grid */
 .ads-grid {
