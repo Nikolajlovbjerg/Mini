@@ -25,8 +25,11 @@ namespace Server.Repositories
         }
 
 
+        private static int nextId = 1;
+
         public void add(Annonce annonce)
         {
+            annonce.AnonnceId = nextId++;
             mAnonncer.Add(annonce);
         }
 
