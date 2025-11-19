@@ -2,7 +2,7 @@ using MongoDB.Driver;
 using Core;
 using Server.PW1;
 
-namespace Server.Repositories.TEST;
+namespace Server.Repositories;
 
 public class AnnonceRepositoryMongoDb : IAnnonceRepository
 {
@@ -20,10 +20,17 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
     {
         return aAnnonce.Find(_  => true).ToList();
     }
-
+    
     public void Add(Annonce annonce)
     {
-        annonce.AnonnceId = new Random().Next(1, int.MaxValue);
+        var lastAnnonce = aAnnonce
+            .Find(Builders<Annonce>.Filter.Empty)
+            .SortByDescending(a => a.AnonnceId)
+            .Limit(1)
+            .FirstOrDefault();
+
+        annonce.AnonnceId = (lastAnnonce?.AnonnceId ?? 0) + 1;
+
         aAnnonce.InsertOne(annonce);
     }
 }

@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Options;
 using Server.Repositories;
-using Server.Repositories.TEST;
 
 var builder = WebApplication.CreateBuilder(args);
 

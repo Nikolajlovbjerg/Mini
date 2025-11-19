@@ -1,36 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Server.Repositories;
 using Core;
-using ZstdSharp.Unsafe;
+using Microsoft.AspNetCore.Mvc;
+using Server.Repositories;
 
+namespace Server.Controllers;
 
-namespace Server.Controllers
-{
     [ApiController]
-    [Route("api/annoncer")]
+    [Route("api/annonce")]
     public class AnnonceController : ControllerBase
     {
-        private IAnnonceRepo AnnonceRepo;
+        private IAnnonceRepository aAnnonce;
 
-        public AnnonceController(IAnnonceRepo AnnonceRepo)
+        public AnnonceController(IAnnonceRepository aAnnonce)
         {
-            this.AnnonceRepo = AnnonceRepo;
+            this.aAnnonce = aAnnonce;
+        }
+
+        [HttpPost]
+        public void Add(Annonce annonce) 
+        {
+            aAnnonce.Add(annonce);
         }
 
         [HttpGet]
-        public IEnumerable<Annonce> Get()
-        {
-            return AnnonceRepo.GetAll();
-        }
-        [HttpPost]
-        public void Add(Annonce annonce) { 
-        AnnonceRepo.add(annonce);
-        }
-        
-        [HttpDelete]
-        [Route("delete/{id:int}")]
-        public void Delete(int id) {
-            AnnonceRepo.delete(id);
+        public IEnumerable<Annonce> GetAll() 
+        { 
+            return aAnnonce.GetAll();
         }
     }
-}

@@ -1,6 +1,6 @@
 using Core;
 
-namespace Server.Repositories.TEST;
+namespace Server.Repositories;
 
 public interface IAnnonceRepository
 {
