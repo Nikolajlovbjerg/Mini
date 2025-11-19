@@ -62,9 +62,6 @@
     
     protected override async Task OnInitializedAsync()
     {
-        // No need to fetch a list here for a create page
-        /*return Task.CompletedTask;*/
-        
         annoncer = await Http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annonce");
     }
 
