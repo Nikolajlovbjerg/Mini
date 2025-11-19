@@ -5,20 +5,13 @@ namespace Server.Repositories;
 
 public class MongoDb
 {
-    private readonly IMongoDatabase _database;
+    private readonly IMongoDatabase _db;
 
-    public MongoDb(IConfiguration config)
+    public IMongoCollection<Anmodning> Anmodninger => _db.GetCollection<Anmodning>("Anmodninger");
+
+    public MongoDb()
     {
-        var connectionString = config["MongoDbSettings:ConnectionString"];
-        var dbName = config["MongoDbSettings:DatabaseName"];
-
-        if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(dbName))
-            throw new Exception("MongoDB connection settings missing!");
-
-        var client = new MongoClient(connectionString);
-        _database = client.GetDatabase(dbName);
+        var client = new MongoClient("mongodb://localhost:27017");
+        _db = client.GetDatabase("GenbrugsMarked"); 
     }
-
-    public IMongoCollection<Anmodning> Anmodninger => _database.GetCollection<Anmodning>("Anmodninger");
-    public IMongoCollection<Annonce> Annoncer => _database.GetCollection<Annonce>("Annoncer");
 }

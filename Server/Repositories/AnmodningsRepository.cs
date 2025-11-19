@@ -1,7 +1,7 @@
 using MongoDB.Driver;
 using Core;
-using Server.Repositories;
 
+namespace Server.Repositories;
 
 public class AnmodningsRepository : IAnmodningRepo
 {
@@ -9,24 +9,27 @@ public class AnmodningsRepository : IAnmodningRepo
 
     public AnmodningsRepository(MongoDb db)
     {
-        _collection = db.Anmodninger; // collection-navnet matcher MongoDB
+        _collection = db.Anmodninger;
     }
 
-    public async Task Create(Anmodning a)
+    public List<Anmodning> GetAll()
     {
-        await _collection.InsertOneAsync(a);
+        return _collection.Find(_ => true).ToList();
     }
 
-    public async Task<List<Anmodning>> GetByAnnonceId(int annonceId)
+    public void Add(Anmodning a)
     {
-        return await _collection
-            .Find(a => a.AnnonceId == annonceId)
-            .ToListAsync();
-    }
+        // lav manuelt autoincrement ID (samme stil som jeres andre repos)
+        var last = _collection
+            .Find(Builders<Anmodning>.Filter.Empty)
+            .SortByDescending(x => x.AnmodningId)
+            .Limit(1)
+            .FirstOrDefault();
 
-    public async Task UpdateStatus(int id, string status)
-    {
-        var update = Builders<Anmodning>.Update.Set(a => a.Status, status);
-        await _collection.UpdateOneAsync(a => a.AnmodningId == id, update);
+        a.AnmodningId = (last?.AnmodningId ?? 0) + 1;
+        a.Status = a.Status ?? "pending";
+        a.Date = DateTime.UtcNow;
+
+        _collection.InsertOne(a);
     }
 }
