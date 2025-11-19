@@ -1,7 +1,9 @@
 @page "/marked"
 @inject NavigationManager NavMan
+@inject HttpClient Http
 @using Core
 @using Client.Components.Marked;
+@using Client.PW1
 
 
 <div class="container-xl">
@@ -40,6 +42,13 @@
 @code {
     private string search = "";
     private string SelectedCategory { get; set; } = "Alle";
+
+    private List<Annonce> Annoncer = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+      Annoncer = await Http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
+    }
     
     IEnumerable<Annonce> FilteredAnnoncer => SelectedCategory == "Alle"
       ? Annoncer
@@ -50,7 +59,7 @@
       SelectedCategory = cat;
     }
     
-    private List<Annonce> Annoncer = new()
+    /*private List<Annonce> Annoncer = new()
     {
       new Annonce
       {
@@ -195,5 +204,5 @@
         BrugerId = 4,
         Location = "SH-A1.06"
       }
-    };
+    };*/
 }

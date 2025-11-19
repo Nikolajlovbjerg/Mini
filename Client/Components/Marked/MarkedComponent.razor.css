@@ -1,7 +1,7 @@
 :host { display:block; }
 
 .ad-card {
-    border-radius: 12px;
+    border-radius: 5px;
     overflow: hidden;
     background:#fff;
     box-shadow: 0 6px 18px rgba(19,22,33,0.06);
@@ -30,10 +30,10 @@
     position:absolute;
     left:12px;
     bottom:12px;
-    background: rgba(0,0,0,0.78);
+    background: rgba(14, 73, 0, 0.75);
     color:#fff;
-    padding:8px 12px;
-    border-radius:8px;
+    padding:6px 10px;
+    border-radius:10px;
     font-weight:700;
     font-size:16px;
 }

@@ -1,0 +1,20 @@
+@page "/annonce/{AnnonceId:int}"
+@using Core
+@inject HttpClient Http
+@using Client.PW1
+@using Client.Components.Marked
+
+<MarkedDetailsComponent Annonce="@annonce"/>
+
+@code {
+    [Parameter] 
+    public int AnnonceId { get; set; }
+    
+    private Annonce annonce = null;
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+        annonce = await Http.GetFromJsonAsync<Annonce>($"http://localhost:{PASSWORD.localPort}/api/annonce/{AnnonceId}");
+    }
+}

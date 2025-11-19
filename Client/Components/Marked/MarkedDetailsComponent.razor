@@ -1,0 +1,48 @@
+@using Core
+
+<div class="product-detail container-xl">
+  
+  @if (Annonce != null)
+  {
+    <div class="gallery">
+      <div class="main-image">
+        <img src="@Annonce.ImageUrl" alt="@Annonce?.Title" loading="lazy"/>
+      </div>
+    </div>
+
+
+    <aside class="details">
+      <h1 class="title">@Annonce?.Title</h1>
+      <span class="price">@Annonce?.Price.ToString("N0") kr.</span>
+      <div class="desc">
+        @if (!string.IsNullOrWhiteSpace(Annonce?.Description))
+        {
+          <p>@Annonce.Description</p>
+        }
+      </div>
+      <div class="actions">
+        <button class="btn primary" @onclick="OnSendMessage">Andmod om køb</button>
+      </div>
+      <dl class="meta-list">
+        <dt>Sælger</dt><dd>@Annonce?.SælgerId</dd>
+        <dt>Lokation</dt><dd>@Annonce?.Location</dd>
+        <dt>Kategori</dt><dd>@Annonce?.Category</dd>
+      </dl>
+    </aside>
+  }
+</div >
+      
+
+  @code {
+    [Parameter] public Annonce? Annonce { get; set; }
+
+    
+    
+
+    private void OnSendMessage()
+    {
+        Console.WriteLine($"Send besked for annonce {Annonce?.AnonnceId}");
+    }
+
+   
+}

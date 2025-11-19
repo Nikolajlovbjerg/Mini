@@ -1,6 +1,7 @@
 @using Core
+@inject NavigationManager Nav
 
-<article class="ad-card">
+<article class="ad-card" @onclick="() => GotoDetailPage()">
     <div class="ad-media">
         <img src="@Annonce.ImageUrl" alt="Annonce billede" />
         <div class="price-badge">@Annonce.Price kr.</div>
@@ -21,5 +22,13 @@
 </article>
 @code {
     [Parameter] public Annonce Annonce { get; set; }
-    
+
+
+    private Task GotoDetailPage()
+    {
+        var aid = Annonce.AnonnceId;
+            Nav.NavigateTo($"annonce/{aid}");
+            return Task.CompletedTask;
+    }
+
 }

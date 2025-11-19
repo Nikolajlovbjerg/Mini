@@ -26,4 +26,10 @@ namespace Server.Controllers;
         { 
             return aAnnonce.GetAll();
         }
+
+        [HttpGet("{id}")]
+        public Annonce GetById(int id)
+        {
+            return GetAll().Where(a => a.AnonnceId == id).ToList()[0];
+        }
     }
