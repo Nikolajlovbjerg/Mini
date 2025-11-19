@@ -1,0 +1,90 @@
+@page "/TilføjAnnonce"
+@using Core
+@inject HttpClient Http
+@using Client.Components
+
+<h3>TilføjAnnonce</h3>
+
+<EditForm Model="@annonce" class="row p-3">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="col-md-12 mb-3">
+        <label for="Name">Name</label>
+        <InputText id="Name" @bind-Value="annonce.Title" class="form-control"/>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="Price">Price</label>
+        <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control"/>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="Price">Category</label>
+        <InputSelect id="Category" @bind-Value="annonce.Category" class="form-control">
+            @foreach (var c in catagories)
+            {
+                <option value="@c">@c</option>
+            }
+        </InputSelect>
+    </div>
+    
+    <div class="col-md-6 mb-3">
+        <label for="Price">Location</label>
+        <InputSelect id="Location" @bind-Value="annonce.Location" class="form-control">
+            @foreach (var l in locations)
+            {
+                <option value="@l">@l</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <label for="Description">Description</label>
+        <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control"/>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success" @onclick="OnClickAddProduct">Submit</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    private List<Annonce> annoncer = new();
+    
+    private Annonce annonce = new();          
+    private string errorText = "";      
+
+    private string[] catagories = { "--Vælg en kategori--", "Elektronik", "Bil", "Møbler", "Tøj", "Kunst", "Have" };
+    private string[] locations = { "--Vælg et lokale--", "SH-A1.06", "SH-A1.02" };
+    
+    protected override async Task OnInitializedAsync()
+    {
+        annoncer = await Http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annonce");
+    }
+
+    private async Task OnClickAddProduct()
+    {
+        errorText = "";
+        try
+        {
+            var response = await Http.PostAsJsonAsync("http://localhost:5044/api/annonce", annonce);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // clear the form after successful create
+                annonce = new Annonce();
+            }
+            else
+            {
+                errorText = $"Kunne ikke oprette bruger (status { (int)response.StatusCode }).";
+            }
+        }
+        catch
+        {
+            errorText = "Fejl ved forbindelse til API'et.";
+        }
+    }
+}

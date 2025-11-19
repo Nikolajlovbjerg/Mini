@@ -1,0 +1,19 @@
+@using Core
+
+<div class="ads-grid">
+    @if (Annoncer == null || !Annoncer.Any())
+    {
+        <p>Ingen annoncer at vise.</p>
+    }
+    else
+    {
+        @foreach (var a in Annoncer)
+        {
+            <MarkedComponent Annonce="a" />
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public IEnumerable<Annonce> Annoncer { get; set; }
+}

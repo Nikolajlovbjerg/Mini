@@ -1,0 +1,25 @@
+@using Core
+
+<article class="ad-card">
+    <div class="ad-media">
+        <img src="@Annonce.ImageUrl" alt="Annonce billede" />
+        <div class="price-badge">@Annonce.Price kr.</div>
+    </div>
+
+    <div class="ad-body">
+        <div class="ad-meta">@Annonce.Location</div>
+        <div class="ad-title">@Annonce.Title</div>
+        @if (!string.IsNullOrWhiteSpace(Annonce.Description))
+        {
+            <p class="ad-desc">@Annonce.Description</p>
+        }
+    </div>
+
+    <div class="ad-footer">
+        <strong>Kategori:</strong> @Annonce.Category
+    </div>
+</article>
+@code {
+    [Parameter] public Annonce Annonce { get; set; }
+    
+}

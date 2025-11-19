@@ -1,4 +1,5 @@
 ﻿@page "/annoncer"
+@using Client.PW1
 @inject NavigationManager Nav
 @using Client.Components
 @using Core;
@@ -28,12 +29,22 @@ else
 
     private List<Annonce> annoncer = new();
 
+	protected override async Task OnInitializedAsync()
+	{
+		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
+	}
     protected override async Task OnInitializedAsync()
     {
         //without services:
         annoncer = await http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annoncer");
     }
 	
+	void GoToTilføjAnnoncePage()
+	{
+		Nav.NavigateTo("/TilføjAnnonce");
+	}
+
+
     void GoToTilføjAnnoncePage()
     {
         foreach (var a in annoncer)

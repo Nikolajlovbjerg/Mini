@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Client;
+using Client.Service;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -11,5 +12,9 @@ builder.Services.AddScoped<Client.Services.AnmodningService>();
 
 builder.Services.AddScoped(sp => new HttpClient 
     { BaseAddress = new Uri("http://localhost:5044/") });
+
+builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+builder.Services.AddSingleton<IBrugerService, BrugerServiceHttp>();
 
 await builder.Build().RunAsync();
