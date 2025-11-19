@@ -12,4 +12,6 @@ builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(build
 
 builder.Services.AddSingleton<IBrugerService, BrugerServiceHttp>();
 
+builder.Services.AddSingleton<IFileService, FileService>();
+
 await builder.Build().RunAsync();

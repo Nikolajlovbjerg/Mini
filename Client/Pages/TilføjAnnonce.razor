@@ -1,6 +1,8 @@
 @page "/TilføjAnnonce"
 @using Core
+@using Client.Service
 @inject HttpClient Http
+@inject IFileService FileService
 @using Client.Components
 
 <h3>TilføjAnnonce</h3>
@@ -38,6 +40,10 @@
         </InputSelect>
     </div>
 
+    <div class="col-md-6 mb-3">
+        <InputFile OnChange="@UploadFile" />
+    </div>
+
     <div class="col-md-12 mb-3">
         <label for="Description">Description</label>
         <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control"/>
@@ -51,18 +57,22 @@
 </EditForm>
 
 @code {
+    private string statusMessage = "<No Message - yet>";
+
+    private List<string>? keys; 
 
     private List<Annonce> annoncer = new();
-    
+
     private Annonce annonce = new();          
     private string errorText = "";      
 
     private string[] catagories = { "--Vælg en kategori--", "Elektronik", "Bil", "Møbler", "Tøj", "Kunst", "Have" };
     private string[] locations = { "--Vælg et lokale--", "SH-A1.06", "SH-A1.02" };
-    
+
     protected override async Task OnInitializedAsync()
     {
         annoncer = await Http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annonce");
+        keys = await FileService.GetAllKeys();
     }
 
     private async Task OnClickAddProduct()
@@ -79,7 +89,7 @@
             }
             else
             {
-                errorText = $"Kunne ikke oprette bruger (status { (int)response.StatusCode }).";
+                errorText = $"Kunne ikke oprette bruger (status {(int)response.StatusCode}).";
             }
         }
         catch
@@ -87,4 +97,21 @@
             errorText = "Fejl ved forbindelse til API'et.";
         }
     }
-}
+
+
+          private async Task UploadFile(InputFileChangeEventArgs e)
+    {
+        // compute a stream to the file chosen by the user
+        var file = e.File;
+        var stream = file.OpenReadStream(maxAllowedSize: 10_000_000); // fx 10 MB
+
+        var res = await FileService.SendFile(file.Name, stream);
+
+        statusMessage = res.success ?
+                            $"Upload lykkedes til {res.info} !!!" :
+                            $"Fejl: {res.info}";
+
+        keys = await FileService.GetAllKeys();
+    }
+
+    }
