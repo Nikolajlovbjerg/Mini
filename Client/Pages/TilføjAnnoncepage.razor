@@ -1,6 +1,7 @@
 ﻿@page "/add-annonce"
 @inject NavigationManager Nav
 @using Core
+@using PW1
 @inject HttpClient http
 
 <h1 class="mb-3 mt-3">Tilføj annonce</h1>
@@ -78,7 +79,7 @@
     {
         // Tilføj annonce til listen
         annoncer.Add(aAnnonce);
-        await http.PostAsJsonAsync("http://localhost:5044/api/annoncer", annoncer);
+        await http.PostAsJsonAsync($"http://localhost:{PASSWORD.localPort}/api/annoncer", annoncer);
         annoncer = new(); // clear fields in form
         Nav.NavigateTo("annoncer");
         // Ryd formular
