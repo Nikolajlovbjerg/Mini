@@ -13,25 +13,30 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="col-md-12 mb-3">
-        <label for="Name">Name</label>
-        <InputText id="Name" @bind-Value="_bruger.Name" class="form-control" />
+        <label for="Name">Name:</label>
+        <InputText id="Name" @bind-Value="_bruger.Name" class="form-control" placeholder="Navn"/>
     </div>
     <div class="col-md-12 mb-3">
-        <label for="Email">Email</label>
-        <InputText id="Email" @bind-Value="_bruger.Email" class="form-control" />
-    </div>
-    <div class="col-md-6 mb-3">
-        <label for="Password">Password</label>
-        <InputText id="Password" @bind-Value="_bruger.Password" class="form-control" />
+        <label for="Email">Email:</label>
+        <InputText id="Email" @bind-Value="_bruger.Email" class="form-control" placeholder="Email"/>
     </div>
     <div class="col-md-12 mb-3">
-        <label for="Phone">Phone</label>
-        <InputText id="Phone" @bind-Value="_bruger.Phone" class="form-control" />
+        <label for="pwd">Adgangskode:</label>
+        <InputText id="pwd"
+                   type="@PasswordType"
+                   class="form-control"
+                   @bind-Value="_bruger.Password"
+                   placeholder="Adgangskode"/>
+        <i class="bi bi-eye" @onclick="ToggleAdgangskodeVisibility"></i>
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Phone">Telefon nummer:</label>
+        <InputText id="Phone" @bind-Value="_bruger.Phone" class="form-control" placeholder="Telefon nummer"/>
     </div>
 
     <div class="col-md-12 mb-3">
-        <label for="Adress">Adress</label>
-        <InputText id="Adress" @bind-Value="_bruger.Address" class="form-control" />
+        <label for="Adress">Adresse:</label>
+        <InputText id="Adress" @bind-Value="_bruger.Address" class="form-control" placeholder="Adresse"/>
     </div>
 
     <div class="col-12 mb-3">
@@ -51,5 +56,10 @@
         navMan.NavigateTo("bruger");
 
     }
+    
+    private string PasswordType => visPassword ? "text" : "password";
+    private bool visPassword = false;
+
+    private void ToggleAdgangskodeVisibility() => visPassword = !visPassword;
 
 }
