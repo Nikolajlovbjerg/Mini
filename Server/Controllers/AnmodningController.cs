@@ -2,26 +2,28 @@ using Microsoft.AspNetCore.Mvc;
 using Core;
 using Server.Repositories;
 
+namespace Server.Controllers;
+
 [ApiController]
 [Route("api/anmodning")]
 public class AnmodningController : ControllerBase
 {
-    private readonly IAnmodningRepo repo;
+    private readonly IAnmodningRepo _AnmodCollection;
 
-    public AnmodningController(IAnmodningRepo repo)
+    public AnmodningController(IAnmodningRepo _AnmodCollection)
     {
-        this.repo = repo;
+        this._AnmodCollection = _AnmodCollection;
     }
 
     [HttpGet]
     public IEnumerable<Anmodning> GetAll()
     {
-        return repo.GetAll();
+        return _AnmodCollection.GetAll();
     }
 
     [HttpPost]
-    public void Add(Anmodning a)
+    public void Add(Anmodning anmod)
     {
-        repo.Add(a);
+        _AnmodCollection.Add(anmod);
     }
 }

@@ -24,13 +24,7 @@ namespace Server.Controllers
         }
         [HttpPost]
         public void Add(Annonce annonce) { 
-        AnnonceRepo.add(annonce);
-        }
-        
-        [HttpDelete]
-        [Route("delete/{id:int}")]
-        public void Delete(int id) {
-            AnnonceRepo.delete(id);
+        AnnonceRepo.Add(annonce);
         }
     }
 }

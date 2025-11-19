@@ -4,9 +4,9 @@ using Server.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<IAnnonceRepo, AnnonceRepoInMemory>();
-builder.Services.AddSingleton<MongoDb>();
-builder.Services.AddSingleton<IAnmodningRepo, AnmodningsRepository>();builder.Services.AddControllers();
+builder.Services.AddSingleton<IAnnonceRepo, AnnonceRepositoryMongoDb>();
+builder.Services.AddSingleton<IAnmodningRepo, AnmodningsRepository>();
+builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("policy",

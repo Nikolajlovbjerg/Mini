@@ -1,35 +1,37 @@
-using MongoDB.Driver;
 using Core;
+using MongoDB.Driver;
+using Server.PW1;
 
 namespace Server.Repositories;
 
 public class AnmodningsRepository : IAnmodningRepo
 {
-    private readonly IMongoCollection<Anmodning> _collection;
+    private readonly IMongoCollection<Anmodning> _AnmodCollection;
 
-    public AnmodningsRepository(MongoDb db)
+    public AnmodningsRepository()
     {
-        _collection = db.Anmodninger;
+        var mongoUri = $"mongodb+srv://tobiaskring111_db_user:{PASSWORD.superHemligPassword}@dbtest.adqud16.mongodb.net/";
+        var client = new MongoClient(mongoUri);
+        var database = client.GetDatabase("Genbrug");
+        _AnmodCollection = database.GetCollection<Anmodning>("Anmodning");
     }
 
     public List<Anmodning> GetAll()
     {
-        return _collection.Find(_ => true).ToList();
+        return _AnmodCollection.Find(_ => true).ToList();
     }
 
-    public void Add(Anmodning a)
+    public void Add(Anmodning anmod)
     {
         // lav manuelt autoincrement ID (samme stil som jeres andre repos)
-        var last = _collection
-            .Find(Builders<Anmodning>.Filter.Empty)
-            .SortByDescending(x => x.AnmodningId)
-            .Limit(1)
-            .FirstOrDefault();
+        var lastAnmod = _AnmodCollection
+           .Find(Builders<Anmodning>.Filter.Empty)
+           .SortByDescending(a => a.AnmodningId)
+           .Limit(1)
+           .FirstOrDefault();
+        anmod.AnmodningId = (lastAnmod?.AnmodningId ?? 0) + 1;
+        
 
-        a.AnmodningId = (last?.AnmodningId ?? 0) + 1;
-        a.Status = a.Status ?? "pending";
-        a.Date = DateTime.UtcNow;
-
-        _collection.InsertOne(a);
+        _AnmodCollection.InsertOne(anmod);
     }
 }

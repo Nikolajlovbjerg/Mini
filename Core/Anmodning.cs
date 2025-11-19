@@ -6,8 +6,6 @@ namespace Core;
 public class Anmodning
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? MongoId { get; set; }
     public int AnmodningId { get; set; }
     public int AnnonceId { get; set; }
     public int BuyerId { get; set; }
