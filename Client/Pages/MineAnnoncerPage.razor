@@ -1,7 +1,8 @@
 ﻿@page "/annoncer"
+@using Client.PW1
 @inject NavigationManager Nav
 @using Client.Components
-@using Core;
+@using Core
 @inject HttpClient http
 
 
@@ -30,7 +31,7 @@ else
 	protected override async Task OnInitializedAsync()
 	{
 		//without services:
-		annoncer = await http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annoncer");
+		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"mongodb+srv://tobiaskring111_db_user:{PASSWORD.superHemligPassword}@dbtest.adqud16.mongodb.net/");
 	}
 	
 	void GoToTilføjAnnoncePage()
