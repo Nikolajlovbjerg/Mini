@@ -2,7 +2,8 @@ using MongoDB.Driver;
 using Core;
 using Server.Repositories;
 
-public class AnmodningsRepository
+
+public class AnmodningsRepository : IAnmodningRepo
 {
     private readonly IMongoCollection<Anmodning> _collection;
 

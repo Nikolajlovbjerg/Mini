@@ -6,9 +6,9 @@ using Server.Repositories;
 [Route("api/anmodning")]
 public class AnmodningController : ControllerBase
 {
-    private readonly AnmodningsRepository _repo;
+    private readonly IAnmodningRepo _repo;
 
-    public AnmodningController(AnmodningsRepository repo)
+    public AnmodningController(IAnmodningRepo repo)
     {
         _repo = repo;
     }
