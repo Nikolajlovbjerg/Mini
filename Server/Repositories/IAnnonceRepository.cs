@@ -2,7 +2,7 @@ using Core;
 
 namespace Server.Repositories;
 
-// Her er interfacet, bestemmer man så de metoder der skal findes.
+// Her er interfacet, her bestemmer man så de metoder der skal findes.
 // Derfor er det her ting, hvad man kan gøre 
 // CRUD. Create,Read,Update,Delete 
 public interface IAnnonceRepository
