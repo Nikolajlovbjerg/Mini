@@ -1,7 +1,44 @@
 ﻿@page "/indkøb"
+@inject HttpClient http
+@using Core
+@using PW1
 
-<h3>MineKøbPage</h3>
+<h3>Mine køb</h3>
+
+@if (mineKøb == null)
+{
+    <p>Loading...</p>
+}
+else if (!mineKøb.Any())
+{
+    <p>Ingen køb endnu.</p>
+}
+else
+{
+    <div class="d-flex flex-wrap">
+        @foreach (var k in mineKøb)
+        {
+            <div class="card m-2 p-3 shadow-sm border rounded" style="width: 260px;">
+                <h5>AnnonceId: @k.AnnonceId</h5>
+                <p>BuyerId: @k.BuyerId</p>
+                <p>SælgerId: @k.SælgerId</p>
+                <p>Status: @k.Status</p>
+                <p>Dato: @k.Created.ToLocalTime()</p>
+            </div>
+        }
+    </div>
+}
 
 @code {
+    private List<MineIndkøb> mineKøb;
 
+    // Hardcoded brugerId til test – skift til den loggede bruger
+    private int brugerId = 0;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        mineKøb = await http.GetFromJsonAsync<List<MineIndkøb>>(
+            $"http://localhost:{PASSWORD.localPort}/api/mineindkøb/{brugerId}");
+    }
 }
