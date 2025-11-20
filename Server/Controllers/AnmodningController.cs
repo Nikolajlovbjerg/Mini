@@ -26,4 +26,10 @@ public class AnmodningController : ControllerBase
     {
         _AnmodCollection.Add(anmod);
     }
+
+    [HttpGet("byAnnonce/{annonceId}")]
+    public IEnumerable<Anmodning> GetByAnnonceId(int annonceId)
+    {
+        return _AnmodCollection.GetByAnnonceId(annonceId);
+    }
 }

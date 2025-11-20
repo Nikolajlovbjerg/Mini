@@ -32,7 +32,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         anmodninger = await Http.GetFromJsonAsync<List<Anmodning>>(
-            $"http://localhost:{PASSWORD.localPort}/api/anmodning"
+            $"http://localhost:{PASSWORD.localPort}/api/anmodning/byAnnonce/{AnnonceId}"
         );
     }
 }

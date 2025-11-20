@@ -6,5 +6,6 @@ namespace Server.Repositories;
 public interface IAnmodningRepo
 {
     List<Anmodning> GetAll();
+    List<Anmodning> GetByAnnonceId(int annonceId);
     void Add(Anmodning anmod);
 }

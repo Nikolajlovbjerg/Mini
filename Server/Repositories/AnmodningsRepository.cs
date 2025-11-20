@@ -21,6 +21,13 @@ public class AnmodningsRepository : IAnmodningRepo
         return _AnmodCollection.Find(_ => true).ToList();
     }
 
+    public List<Anmodning> GetByAnnonceId(int annonceId)
+    {
+        return _AnmodCollection
+            .Find(a => a.AnnonceId == annonceId)
+            .ToList();
+    }
+
     public void Add(Anmodning anmod)
     {
         // lav manuelt autoincrement ID (samme stil som jeres andre repos)
