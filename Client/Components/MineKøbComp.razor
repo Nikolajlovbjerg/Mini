@@ -1,0 +1,22 @@
+@using Core
+@namespace Client.Components
+
+<article class="annonce-row" role="listitem">
+    <div class="thumb">
+        <img src="@Indkøb.ImageUrl" alt="@Indkøb?.Title" loading="lazy" />
+    </div>
+
+    <div class="content">
+        <h3 class="title">@Indkøb?.Title</h3>
+
+        <div class="subtitle">
+            <span class="where">Marked</span>
+            <span class="price">til salg @Indkøb?.Price.ToString("N0") kr.</span>
+        </div>
+    </div>
+</article>
+
+@code {
+    [Parameter] public MineIndkøb Indkøb { get; set; } = null;
+    
+}

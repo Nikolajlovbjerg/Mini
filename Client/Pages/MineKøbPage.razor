@@ -2,28 +2,26 @@
 @inject HttpClient Http
 @using Core
 @using PW1
+@using Client.Components
 
 <h3>Mine Indkøb</h3>
 
-@if (mineIndkøb == null)
+
+@if (mineIndkøb == null )
 {
-    <p>Henter...</p>
-}
-else if (!mineIndkøb.Any())
-{
-    <p>Ingen køb endnu.</p>
+    <p>Ingen produkter</p>
 }
 else
 {
-    <ul>
-        @foreach (var item in mineIndkøb)
+    <div class="d-flex flex-wrap">
+        @foreach (var p in mineIndkøb)
         {
-            <li>
-                <b>@item.Title</b> — Pris: @item.Price kr — Købt: @item.KøbtDato.ToLocalTime().ToString("dd/MM/yyyy")
-            </li>
+            <MineKøbComp Indkøb="p"/>
         }
-    </ul>
+    </div>
+
 }
+
 
 @code {
     private List<MineIndkøb>? mineIndkøb;
@@ -36,8 +34,6 @@ else
     private async Task LoadMineIndkøb()
     {
         // Skift URL til det endpoint, der returnerer dine køb
-        mineIndkøb = await Http.GetFromJsonAsync<List<MineIndkøb>>(
-            $"http://localhost:{PASSWORD.localPort}/api/mineindkob"
-        );
+        mineIndkøb = await Http.GetFromJsonAsync<List<MineIndkøb>>($"http://localhost:{PASSWORD.localPort}/api/mineindkob");
     }
 }
