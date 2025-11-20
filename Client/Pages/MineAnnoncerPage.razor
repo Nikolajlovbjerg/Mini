@@ -23,7 +23,7 @@ else
 	<div class="d-flex flex-wrap">
 		@foreach (var p in annoncer)
 		{
-			<AnnonceCard Annonce="p" OnDelete="@(id => DeleteAnnonce(id))" />
+			<AnnonceCard Annonce="p" OnDelete="@(id => DeleteAnnonce(id))"/>
 		}
 	</div>
 
