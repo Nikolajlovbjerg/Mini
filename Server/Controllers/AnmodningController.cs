@@ -38,4 +38,11 @@ public class AnmodningController : ControllerBase
     {
         _AnmodCollection.AcceptAnmodning(annonceId, anmodningId);
     }
+
+    [HttpPut("acceptMove/{annonceId}/{anmodningId}")]
+    public IActionResult AcceptAndMove(int annonceId, int anmodningId)
+    {
+        _AnmodCollection.AcceptAndMove(annonceId, anmodningId);
+        return Ok();
+    }
 }

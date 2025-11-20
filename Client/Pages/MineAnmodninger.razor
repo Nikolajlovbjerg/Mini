@@ -22,34 +22,48 @@ else
                 <b>@a.AnnonceId</b> — @a.Status — @a.Date
                 @if (a.Status == "pending")
                 {
-                    <button class="btn btn-success btn-sm" @onclick="() => Accept(a.AnmodningId)">Accepter</button>
+                    <button class="btn btn-success btn-sm"
+                            @onclick="() => AcceptAndMove(a.AnmodningId)">
+                        Accepter
+                    </button>
                 }
             </li>
         }
-</ul>
+    </ul>
 }
+
 @code {
     [Parameter] public int AnnonceId { get; set; }
     private List<Anmodning>? anmodninger = null;
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadAnmodninger();
+    }
+
+    private async Task LoadAnmodninger()
+    {
         anmodninger = await Http.GetFromJsonAsync<List<Anmodning>>(
             $"http://localhost:{PASSWORD.localPort}/api/anmodning/byAnnonce/{AnnonceId}"
         );
     }
 
-    private async Task Accept(int anmodningId)   // ✅ Metoden skal eksistere
+    private async Task Accept(int anmodningId)
     {
-        // Kalder API'et til at acceptere anmodningen
         await Http.PutAsync(
             $"http://localhost:{PASSWORD.localPort}/api/anmodning/accept/{AnnonceId}/{anmodningId}",
             null
         );
 
-        // Opdater listen bagefter
-        anmodninger = await Http.GetFromJsonAsync<List<Anmodning>>(
-            $"http://localhost:{PASSWORD.localPort}/api/anmodning/byAnnonce/{AnnonceId}"
+        await LoadAnmodninger(); // opdater listen
+    }
+    private async Task AcceptAndMove(int anmodningId)
+    {
+        await Http.PutAsync(
+            $"http://localhost:{PASSWORD.localPort}/api/anmodning/acceptMove/{AnnonceId}/{anmodningId}",
+            null
         );
+
+        await LoadAnmodninger(); // opdater listen bagefter
     }
 }

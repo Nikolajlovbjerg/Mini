@@ -1,7 +1,43 @@
 ﻿@page "/indkøb"
+@inject HttpClient Http
+@using Core
+@using PW1
 
-<h3>MineKøbPage</h3>
+<h3>Mine Indkøb</h3>
+
+@if (mineIndkøb == null)
+{
+    <p>Henter...</p>
+}
+else if (!mineIndkøb.Any())
+{
+    <p>Ingen køb endnu.</p>
+}
+else
+{
+    <ul>
+        @foreach (var item in mineIndkøb)
+        {
+            <li>
+                <b>@item.Title</b> — Pris: @item.Price kr — Købt: @item.KøbtDato.ToLocalTime().ToString("dd/MM/yyyy")
+            </li>
+        }
+    </ul>
+}
 
 @code {
+    private List<MineIndkøb>? mineIndkøb;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMineIndkøb();
+    }
+
+    private async Task LoadMineIndkøb()
+    {
+        // Skift URL til det endpoint, der returnerer dine køb
+        mineIndkøb = await Http.GetFromJsonAsync<List<MineIndkøb>>(
+            $"http://localhost:{PASSWORD.localPort}/api/mineindkob"
+        );
+    }
 }

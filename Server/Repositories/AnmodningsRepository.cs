@@ -7,6 +7,8 @@ namespace Server.Repositories;
 public class AnmodningsRepository : IAnmodningRepo
 {
     private readonly IMongoCollection<Anmodning> _AnmodCollection;
+    private readonly IMongoCollection<Annonce> aAnnonce;
+    private readonly IMongoCollection<MineIndkøb> mkøb;
 
     public AnmodningsRepository()
     {
@@ -14,6 +16,8 @@ public class AnmodningsRepository : IAnmodningRepo
         var client = new MongoClient(mongoUri);
         var database = client.GetDatabase("Genbrug");
         _AnmodCollection = database.GetCollection<Anmodning>("Anmodning");
+        aAnnonce = database.GetCollection<Annonce>("Annonce");
+        mkøb = database.GetCollection<MineIndkøb>("mineindkøb");
     }
 
     public List<Anmodning> GetAll()
@@ -59,5 +63,47 @@ public class AnmodningsRepository : IAnmodningRepo
         {
             _AnmodCollection.ReplaceOne(x => x.AnmodningId == a.AnmodningId, a);
         }
+    }
+    public void AcceptAndMove(int annonceId, int anmodningId)
+    {
+        //Hent annonce
+        var annonce = aAnnonce.Find(a => a.AnonnceId == annonceId).FirstOrDefault();
+        if (annonce == null) return;
+
+        // Hent accepteret anmodning
+        var anmod = _AnmodCollection.Find(a => a.AnmodningId == anmodningId).FirstOrDefault();
+        if (anmod == null) return;
+
+        // Opret MineIndkøb objekt
+        var mineIndkøb = new MineIndkøb
+        {
+            AnnonceId = annonce.AnonnceId,
+            BrugerId = anmod.BuyerId, // køberen
+            Title = annonce.Title,
+            Description = annonce.Description,
+            Price = annonce.Price,
+            Category = annonce.Category,
+            ImageUrl = annonce.ImageUrl,
+            Location = annonce.Location,
+            SælgerId = annonce.SælgerId
+        };
+
+        //Insert i MineIndkøb collection
+        
+
+        // Auto-increment id (samme logik som før)
+        var last = mkøb.Find(Builders<MineIndkøb>.Filter.Empty)
+                      .SortByDescending(m => m.KøbId)
+                      .Limit(1)
+                      .FirstOrDefault();
+        mineIndkøb.KøbId = (last?.KøbId ?? 0) + 1;
+
+        mkøb.InsertOne(mineIndkøb);
+
+        //Slet annoncen fra Annonce collection
+        aAnnonce.DeleteOne(a => a.AnonnceId == annonceId);
+
+        //Slet alle anmodninger for annoncen
+        _AnmodCollection.DeleteMany(a => a.AnnonceId == annonceId);
     }
 }
