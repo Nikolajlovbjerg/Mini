@@ -10,6 +10,8 @@ public class AnmodningsRepository : IAnmodningRepo
     private readonly IMongoCollection<Annonce> aAnnonce;
     private readonly IMongoCollection<MineIndkob> mkob;
 
+    //Siger mere eller mindre at "mkob" er collectionen med dokumenter af typen (MineInkob)
+
     public AnmodningsRepository()
     {
         var mongoUri = $"mongodb+srv://tobiaskring111_db_user:{PASSWORD.superHemligPassword}@dbtest.adqud16.mongodb.net/";
@@ -18,11 +20,13 @@ public class AnmodningsRepository : IAnmodningRepo
         _AnmodCollection = database.GetCollection<Anmodning>("Anmodning");
         aAnnonce = database.GetCollection<Annonce>("Annonce");
         mkob = database.GetCollection<MineIndkob>("mineindkob");
+
+        //Henter informationen som DB skal bruge som navn på DB og Navn på Collection og con string
     }
 
     public List<Anmodning> GetAll()
     {
-        return _AnmodCollection.Find(_ => true).ToList();
+        return _AnmodCollection.Find(_ => true).ToList(); //Henter alle dokumenter fra DB og konverter det til en liste
     }
 
     public List<Anmodning> GetByAnnonceId(int annonceId)
@@ -30,55 +34,77 @@ public class AnmodningsRepository : IAnmodningRepo
         return _AnmodCollection
             .Find(a => a.AnnonceId == annonceId)
             .ToList();
+
+        //filtere i collectionen så den kun henter de dokumenter hvor Id == Id og derefter konvater det til en liste
+        //og Retunere det
     }
 
     public void Add(Anmodning anmod)
-    {
-        // lav manuelt autoincrement ID (samme stil som jeres andre repos)
+    { 
         var lastAnmod = _AnmodCollection
            .Find(Builders<Anmodning>.Filter.Empty)
            .SortByDescending(a => a.AnmodningId)
            .Limit(1)
            .FirstOrDefault();
         anmod.AnmodningId = (lastAnmod?.AnmodningId ?? 0) + 1;
-        
+
 
         _AnmodCollection.InsertOne(anmod);
+
+        //Ingen filter henter alle documenter
+        //Sorter dem så den med højste id kommer først
+        //Vælger kun den første 
+        //Retunere enten det dokument der blev fundet eller null
+        //Øger id værdien med 1 så der altid vil være et nyt id
+        //Indsætter den i dokumentet
+
+        //Bruges til at fjerne object string uden problemer for nu
     }
     public void AcceptAnmodning(int annonceId, int anmodningId)
     {
-        // Hent alle anmodninger for annoncen
+       
         var anmodninger = _AnmodCollection.Find(a => a.AnnonceId == annonceId).ToList();
 
         foreach (var a in anmodninger)
         {
             if (a.AnmodningId == anmodningId)
-                a.Status = "accepteret"; // Accepter den valgte
+                a.Status = "accepteret"; 
             else if (a.Status == "pending")
-                a.Status = "afvist"; // Afvis de andre pending
+                a.Status = "afvist"; 
         }
 
-        // Opdater alle �ndringer tilbage i databasen
+        
         foreach (var a in anmodninger)
         {
             _AnmodCollection.ReplaceOne(x => x.AnmodningId == a.AnmodningId, a);
         }
+
+        //filtere i collectionen så den kun henter de dokumenter hvor Id == Id og derefter konvater det til en liste
+        //Og for hvert element køre den et if statement
+        //If statementet siger at hvis den anmodnig der har anmodningId er blevet accepteret så opdatere den status til accepteret på den ene og afvist på de andre
+        //Og så ændre den i DataBasen(Kunne måske have brugt update i stedet for replace)
     }
     public void AcceptAndMove(int annonceId, int anmodningId)
     {
-        //Hent annonce
+       
         var annonce = aAnnonce.Find(a => a.AnonnceId == annonceId).FirstOrDefault();
         if (annonce == null) return;
 
-        // Hent accepteret anmodning
+        //Henter annoncen med annonceId
+        //Hvis den ikke kan finde noget retunere den null(Ingenting)
+
+        
         var anmod = _AnmodCollection.Find(a => a.AnmodningId == anmodningId).FirstOrDefault();
         if (anmod == null) return;
 
-        // Opret MineIndk�b objekt
+        //Henter den specifikke anmodning
+        //Hvis den ikke kan finde noget retunere den null(Ingenting)
+
+
         var mineIndkob = new MineIndkob
         {
             AnnonceId = annonce.AnonnceId,
-            BrugerId = anmod.BuyerId, // k�beren
+            BrugerId = anmod.BuyerId, 
             Title = annonce.Title,
             Description = annonce.Description,
             Price = annonce.Price,
@@ -87,11 +113,18 @@ public class AnmodningsRepository : IAnmodningRepo
             Location = annonce.Location,
             SaelgerId = annonce.SaelgerId
         };
+        //Opretter et ny objekt af typen MineIndkob
+        //Og fylder det med oplysninger fra annonce og anmod
 
-        //Insert i MineIndk�b collection
+        //Det er der fordi vi vil gerne ende med "flytte" dataen fra annoncer til købte ting
+        //Og det gør vi ved at kopiere relevante oplysninger til mineIndkob
+
+        //Så det omhandler at placere noget data fra et sted og fjerne det fra det nuværende sted
+
+        
         
 
-        // Auto-increment id (samme logik som f�r)
+ 
         var last = mkob.Find(Builders<MineIndkob>.Filter.Empty)
                       .SortByDescending(m => m.KobId)
                       .Limit(1)
@@ -100,10 +133,24 @@ public class AnmodningsRepository : IAnmodningRepo
 
         mkob.InsertOne(mineIndkob);
 
-        //Slet annoncen fra Annonce collection
-        aAnnonce.DeleteOne(a => a.AnonnceId == annonceId);
+        //Ingen filter henter alle documenter
+        //Sorter dem så den med højste id kommer først
+        //Vælger kun den første 
+        //Retunere enten det dokument der blev fundet eller null
+        //Øger id værdien med 1 så der altid vil være et nyt id
+        //Indsætter den i dokumentet
 
-        //Slet alle anmodninger for annoncen
+        //Bruges til at fjerne object string uden problemer for nu
+
+        
+        aAnnonce.DeleteOne(a => a.AnonnceId == annonceId);
+        //...aAnnonce er = IMongoCllection<...> //Collectionen\\
+        // DeleteOne finder det første dokument hvor brugerid == id
+        //Så bliver det slettet
+
+
+        
         _AnmodCollection.DeleteMany(a => a.AnnonceId == annonceId);
+        //Samme som før men sletter alle i stedet
     }
 }
