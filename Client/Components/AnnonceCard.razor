@@ -1,22 +1,38 @@
 @using Core
+@namespace Client.Components.AnnonceCard
 
-<div class="card m-2 p-3 shadow-sm border rounded position-relative d-flex flex-column justify-content-between"
-     style="width: 260px; min-height: 420px;">
-    
-    <div class="flex-grow-1">
-        <h4 class="mt-4">@Annonce.Title</h4>
-        <p><strong>Pris:</strong> @Annonce.Price kr.</p>
-        <p class="description">@Annonce.Description</p>
+<article class="annonce-row" role="listitem">
+    <div class="thumb">
+        <img src="@Annonce.ImageUrl" alt="@Annonce?.Title" loading="lazy" />
     </div>
-    
-    <div class="mt-auto pt-2 border-top">
-        <p><strong>Kategori:</strong> @Annonce.Category</p>
-        
-    </div>
-</div>
 
+    <div class="content">
+
+        <h3 class="title">@Annonce?.Title</h3>
+
+        <div class="subtitle">
+            <span class="where">Marked</span>
+            <span class="price">til salg @Annonce?.Price.ToString("N0") kr.</span>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="btn mark-sold" @onclick="OnClickSeeRequest">Se anmodninger</button>
+        <button class="btn more" @onclick="OnMoreClicked" title="Flere handlinger">…</button>
+    </div>
+</article>
 
 @code {
-    [Parameter]
-    public Annonce Annonce { get; set; }
+    [Parameter] public Annonce Annonce { get; set; } = default!;
+
+    private void OnClickSeeRequest()
+    {
+        
+    }
+
+    private void OnMoreClicked()
+    {
+        
+    }
+
 }
