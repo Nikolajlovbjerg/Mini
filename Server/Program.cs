@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSingleton<IAnnonceRepository, AnnonceRepositoryMongoDb>();
 builder.Services.AddSingleton<IBrugerRepo, BrugerRepo>();
+builder.Services.AddSingleton<IAnmodningRepo, AnmodningsRepository>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
