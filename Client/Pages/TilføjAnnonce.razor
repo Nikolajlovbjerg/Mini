@@ -2,11 +2,15 @@
 @using Core
 @inject HttpClient Http
 
-<h3>Opret en annonce</h3>
+<h3>Opret en annonce</h3> 
 
+@* Binder annoncen til formularen *@
 <EditForm Model="@annonce" class="row p-3">
+@* Aktiverer validering baseret på data annotationer i modellen *@
     <DataAnnotationsValidator />
+@* Viser en oversigt over valideringsfejl *@
     <ValidationSummary />
+@* Binder titel til annoncen *@
     <div class="col-md-12 mb-3">
         <label for="Titel">Titel:</label>
         <InputText 
@@ -16,17 +20,20 @@
                 placeholder="Indsæt titel"/>
     </div>
 
+@* Binder pris til annoncen *@
     <div class="col-md-6 mb-3">
         <label for="Pris">Pris:</label>
         <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control" placeholder="Indsæt Pris"/>
     </div>
 
+@* Dropdown for kategori og lokation *@
     <div class="col-md-6 mb-3">
         <label for="Kategori">Kategori:</label>
         <InputSelect id="Category" @bind-Value="annonce.Category" class="form-control">
             @foreach (var c in catagories)
             {
                 <option value="@c">@c</option>
+
             }
         </InputSelect>
     </div>
@@ -40,17 +47,20 @@
             }
         </InputSelect>
     </div>
-    
+
+	@* Brugeren sætter selv billed URL på annoncen  *@
     <div class="col-md-6 mb-3">
         <label for="Billede">Billede:</label>
         <InputText id="Image" @bind-Value="annonce.ImageUrl" class="form-control" placeholder="Indsæt billed URL"/>
     </div>
 
+	@* Binder beskrivelse til annoncen *@
     <div class="col-md-12 mb-3">
         <label for="Beskrivelse">Beskrivelse:</label>
         <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control" placeholder="Indsæt beskrivelse"/>
     </div>
 
+	@* Submit knap til at oprette annoncen *@
     <div class="d-flex justify-content-between align-items-center mt-3">
         <div class="d-flex gap-2">
             <button type="submit" class="opretbtn" @onclick="OnClickAddProduct">Opret</button>
@@ -60,18 +70,21 @@
 
 @code {
 
-    private Annonce annonce = new();          
+	// Opretter tomt Annonce objekt til at binde formularen til
+    private Annonce annonce = new();       
 
+	// Lister med kategorier og lokationer til dropdowns
     private string[] catagories = { "--Vælg en kategori--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
     private string[] locations = { "--Vælg en lokation--", "SH-A1.06", "SH-A1.02" };
-    
+
+	// Sender post request til API'et for at oprette annoncen
     private async Task OnClickAddProduct()
     {
             var response = await Http.PostAsJsonAsync("http://localhost:5044/api/annonce", annonce);
 
+    // Hvis api svarer ok, bliver formularen clearet og klar til en ny annonce
             if (response.IsSuccessStatusCode)
             {
-                // Den clear formularen, så man kan lave en ny
                 annonce = new Annonce();
             }
             

@@ -1,4 +1,4 @@
-﻿@page "/annoncer"
+﻿@page "/annoncer" 
 @using Client.PW1
 @inject NavigationManager Nav
 @using Client.Components.AnnonceCard
@@ -9,15 +9,19 @@
 <div class="header-row">
 	<h3>Mine annoncer</h3>
 
-	<button class="opretbtn" @onclick="GoToTilføjAnnoncePage"> 
+@* Knap der navigerer til siden tilføj annonce siden *@
+	<button class="opretbtn" @onclick="GoToTilføjAnnoncePage">
 		Opret ny annonce
 	</button>
 </div>
 
+@* If statement der viser teksten "Ingen produkter", hvis der ikke er nogen produkter på siden. *@
 @if (annoncer.Count == 0 )
 {
 	<p>Ingen produkter</p>
 }
+
+// Viser annoncecard for hver annonce i listen. OnDelete er en callback der kalder DeleteAnnonce med annonce ID
 else
 {
 	<div class="d-flex flex-wrap">
@@ -31,8 +35,10 @@ else
 
 @code {
 
+	// Liste med alle annoncer. Listen starter tom, indtil data er hentet
 	private List<Annonce> annoncer = new();
 
+	// Kører når komponenten loader. Henter alle annoncer fra API'et og lægger dem ind i listen
 	protected override async Task OnInitializedAsync()
 	{
 		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
@@ -40,12 +46,14 @@ else
 
 	private async Task DeleteAnnonce(int id)
 	{
+	// Sletter en specifik annonce via API'et
 		await http.DeleteAsync($"http://localhost:{PASSWORD.localPort}/api/annonce/{id}");
 		
+	// Henter den opdaterede liste, så hjemmeside opdateres bagefter
 		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
 	}
 
-
+	// Skifter til siden tilføjannonce, hvor brugeren kan oprette sin annonce
 	void GoToTilføjAnnoncePage()
 	{
 		Nav.NavigateTo("/TilføjAnnonce");
