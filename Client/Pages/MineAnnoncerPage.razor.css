@@ -1,0 +1,19 @@
+.header-row {
+    display: flex;
+    justify-content: space-between; /* titel venstre, knap højre */
+    align-items: center;
+    margin-bottom: 12px;
+    margin-top: 50px;
+}
+
+.opretbtn {
+    padding: 8px 16px;
+    border-radius: 5px;
+    background-color: #0e4900;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.opretbtn:hover {
+    background-color: #096300;
+}
