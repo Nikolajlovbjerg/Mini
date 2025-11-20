@@ -30,32 +30,43 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
 //Henter en annonce baseret på dens AnonnceId
     public void Add(Annonce annonce)
     {
-//Finder den sidste annonce for at bestemme det næste AnonnceId
         var lastAnnonce = aAnnonce
             .Find(Builders<Annonce>.Filter.Empty)
             .SortByDescending(a => a.AnonnceId)
             .Limit(1)
             .FirstOrDefault();
-
-//Tildeler +1 til det sidste AnonnceId eller 1 hvis der ikke er nogen annoncer
         annonce.AnonnceId = (lastAnnonce?.AnonnceId ?? 0) + 1;
 
-//Indsætter den nye annonce i aAnnonce-collectionen
         aAnnonce.InsertOne(annonce);
+
+        //Ingen filter henter alle documenter
+        //Sorter dem så den med højste id kommer først
+        //Vælger kun den første 
+        //Retunere enten det dokument der blev fundet eller null
+        //Øger id værdien med 1 så der altid vil være et nyt id
+        //Indsætter den i dokumentet
+
+        //Bruges til at fjerne object string uden problemer for nu
     }
     
-//Opdaterer en eksisterende annonce i databasen
     public void Update(Annonce annonce)
     {
-        // Finder det dokument i databasen, hvor AnonnceId matcher det annonce-objekt vi vil opdatere
         var filter = Builders<Annonce>.Filter.Eq(a => a.AnonnceId, annonce.AnonnceId);
-        // Erstat det gamle dokument med det nye annonce-objekt
+    
         aAnnonce.ReplaceOne(filter, annonce);
+
+        //Finder det dokument hvor det id der er i DB matcher det id du vil opdatere/ændre på
+        //Og så ændre hele dokumentet med objektet (Erstat det gamle dokument med det nye annonce-objekt)
+
     }
 
-//Delete-motode til at slette en annonce baseret på dens AnonnceId
+    //Delete-motode til at slette en annonce baseret på dens AnonnceId
     public void Delete(int id)
     {
         aAnnonce.DeleteOne(a => a.AnonnceId == id);
+
+        //...aAnnonce er = IMongoCllection<...> //Collectionen\\
+        // DeleteOne finder det første dokument hvor brugerid == id
+        //Så bliver det slettet
     }
 }
