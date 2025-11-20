@@ -44,7 +44,7 @@ namespace Server.Controllers;
         }
         
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id, Annonce annonce) 
+        public IActionResult Delete(int id) 
         {
             aAnnonce.Delete(id);
             return Ok();
