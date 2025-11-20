@@ -1,10 +1,8 @@
 ﻿@page "/annoncer"
 @using Client.PW1
 @inject NavigationManager Nav
-@using Client.Components
 @using Client.Components.AnnonceCard
 @using Core;
-@using PW1
 @inject HttpClient http
 
 
@@ -23,7 +21,7 @@ else
 	<div class="d-flex flex-wrap">
 		@foreach (var p in annoncer)
 		{
-			<AnnonceCard Annonce="p" OnDelete="@(id => DeleteAnnonce(id))"/>
+			<AnnonceCard Annonce="p" OnDelete="@((id) => DeleteAnnonce(id))"/>
 		}
 	</div>
 
@@ -41,8 +39,7 @@ else
 	private async Task DeleteAnnonce(int id)
 	{
 		await http.DeleteAsync($"http://localhost:{PASSWORD.localPort}/api/annonce/{id}");
-
-		// Opdater liste på siden
+		
 		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
 	}
 

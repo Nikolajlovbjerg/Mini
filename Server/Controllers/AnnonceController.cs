@@ -42,12 +42,14 @@ namespace Server.Controllers;
             aAnnonce.Update(annonce);
             return NoContent();
         }
+        
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id, Annonce annonce) 
+        {
+            aAnnonce.Delete(id);
+            return Ok();
+        }
+        
     }
-          [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-         {
-        aAnnonce.Delete(id);
-        return Ok();
-          }
+        
 
-}
