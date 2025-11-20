@@ -67,8 +67,10 @@
         if (OnDelete.HasDelegate) await OnDelete.InvokeAsync(Annonce.AnonnceId);
     }
 
-    private async void OnClickSeeRequest()
+    private Task OnClickSeeRequest()
     {
-        
+        var aid = Annonce.AnonnceId;
+            Nav.NavigateTo($"mine-anmodninger/{aid}");
+            return Task.CompletedTask;
     }
 }
