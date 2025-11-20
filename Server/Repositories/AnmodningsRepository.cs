@@ -31,6 +31,7 @@ public class AnmodningsRepository : IAnmodningRepo
 
     public List<Anmodning> GetByAnnonceId(int annonceId)
     {
+        // Find alle anmodninger med samme annonceId
         return _AnmodCollection
             .Find(a => a.AnnonceId == annonceId)
             .ToList();
@@ -65,6 +66,7 @@ public class AnmodningsRepository : IAnmodningRepo
        
         var anmodninger = _AnmodCollection.Find(a => a.AnnonceId == annonceId).ToList();
 
+        // Sæt status
         foreach (var a in anmodninger)
         {
             if (a.AnmodningId == anmodningId)
@@ -131,6 +133,7 @@ public class AnmodningsRepository : IAnmodningRepo
                       .FirstOrDefault();
         mineIndkob.KobId = (last?.KobId ?? 0) + 1;
 
+        //Gem købet
         mkob.InsertOne(mineIndkob);
 
         //Ingen filter henter alle documenter
