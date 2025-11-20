@@ -15,14 +15,12 @@ else if (!anmodninger.Any())
 }
 else
 {
-    <ul>
-        @foreach (var a in anmodninger)
-        {
-            <li>
-                <b>@a.AnnonceId</b> — @a.Status — @a.Date
-            </li>
-        }
-    </ul>
+    <div class="d-flex flex-wrap">
+		@foreach(var p in anmodninger)
+		{
+			<AnnonceCard Anmodning="p"/>
+		}
+	</div>
 }
 
 @code {
