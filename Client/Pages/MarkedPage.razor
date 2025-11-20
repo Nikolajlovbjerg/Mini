@@ -1,4 +1,4 @@
-@page "/marked"
+@page "/"
 @inject NavigationManager NavMan
 @inject HttpClient Http
 @using Core
@@ -24,8 +24,6 @@
 
   
   <section>
-    <h3 style="max-width:1160px;margin:18px auto 8px">Annoncer</h3>
-
     @if (Annoncer.Count == 0)
     {
       <p>Ingen produkter</p>
