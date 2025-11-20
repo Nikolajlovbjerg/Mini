@@ -9,10 +9,10 @@ namespace Server.Repositories
         List<Anmodning> GetByAnnonceId(int annonceId);
         void Add(Anmodning anmod);
 
-        // Accepter en anmodning (sæt status)
+        // Accepter en anmodning (sÃ¦t status)
         void AcceptAnmodning(int annonceId, int anmodningId);
 
-        // Accepter en anmodning OG flyt til MineIndkøb + slet fra Annonce og Anmodning
+        // Accepter en anmodning OG flyt til MineIndkÃ¸b + slet fra Annonce og Anmodning
         void AcceptAndMove(int annonceId, int anmodningId);
     }
 }

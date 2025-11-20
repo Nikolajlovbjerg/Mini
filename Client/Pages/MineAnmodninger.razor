@@ -1,4 +1,4 @@
-@page "/mine-anmodninger/{AnnonceId:int}"
+@page "/mine-anmodninger/{AnnonceId:int}" 
 @inject HttpClient Http
 @using Core;
 @using PW1
@@ -6,22 +6,24 @@
 <h3>Mine Anmodninger</h3>
 
 @if (anmodninger == null)
-{
+{ 
     <p>Henter...</p>
 }
 else if (!anmodninger.Any())
 {
+    
     <p>Ingen anmodninger endnu.</p>
 }
 else
 {
     <ul>
-        @foreach (var a in anmodninger)
-        {
+        @foreach (var a in anmodninger) // Her på L.22 vises anmodningerne i en liste
+        { 
             <li>
-                <b>@a.AnnonceId</b> — @a.Status — @a.Date
-                @if (a.Status == "pending")
-                {
+                <b>@a.AnnonceId</b> — @a.Status — @a.Date 
+                @if (a.Status == "pending") //Hvis status stadig er pending så vises en knap "Accepter"
+                { 
+                    //Accepter knap som kalder backend
                     <button class="btn btn-success btn-sm"
                             @onclick="() => AcceptAndMove(a.AnmodningId)">
                         Accepter
@@ -33,16 +35,21 @@ else
 }
 
 @code {
+    //ID på annoncen kommer fra URL'en
     [Parameter] public int AnnonceId { get; set; }
+    
+    //Liste af anmodninger hentes fra databasen
     private List<Anmodning>? anmodninger = null;
 
     protected override async Task OnInitializedAsync()
     {
+        //Henter anmodninger når siden indlæses
         await LoadAnmodninger();
     }
 
     private async Task LoadAnmodninger()
     {
+        //Henter alle anmodninger for den valgte annonce
         anmodninger = await Http.GetFromJsonAsync<List<Anmodning>>(
             $"http://localhost:{PASSWORD.localPort}/api/anmodning/byAnnonce/{AnnonceId}"
         );
@@ -50,6 +57,8 @@ else
 
     private async Task Accept(int anmodningId)
     {
+        // Kalder API’et med et PUT-kald.
+        // Endpointet findes i AnmodningController:   
         await Http.PutAsync(
             $"http://localhost:{PASSWORD.localPort}/api/anmodning/accept/{AnnonceId}/{anmodningId}",
             null
@@ -59,6 +68,7 @@ else
     }
     private async Task AcceptAndMove(int anmodningId)
     {
+        //Siger til backend at acceptere og flytte annoncen til MineIndkøb
         await Http.PutAsync(
             $"http://localhost:{PASSWORD.localPort}/api/anmodning/acceptMove/{AnnonceId}/{anmodningId}",
             null
