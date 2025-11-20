@@ -8,7 +8,7 @@ public class AnmodningsRepository : IAnmodningRepo
 {
     private readonly IMongoCollection<Anmodning> _AnmodCollection;
     private readonly IMongoCollection<Annonce> aAnnonce;
-    private readonly IMongoCollection<MineIndkøb> mkøb;
+    private readonly IMongoCollection<MineIndkob> mkob;
 
     public AnmodningsRepository()
     {
@@ -17,7 +17,7 @@ public class AnmodningsRepository : IAnmodningRepo
         var database = client.GetDatabase("Genbrug");
         _AnmodCollection = database.GetCollection<Anmodning>("Anmodning");
         aAnnonce = database.GetCollection<Annonce>("Annonce");
-        mkøb = database.GetCollection<MineIndkøb>("mineindk�b");
+        mkob = database.GetCollection<MineIndkob>("mineindkob");
     }
 
     public List<Anmodning> GetAll()
@@ -75,7 +75,7 @@ public class AnmodningsRepository : IAnmodningRepo
         if (anmod == null) return;
 
         // Opret MineIndk�b objekt
-        var mineIndkøb = new MineIndkøb
+        var mineIndkob = new MineIndkob
         {
             AnnonceId = annonce.AnonnceId,
             BrugerId = anmod.BuyerId, // k�beren
@@ -85,20 +85,20 @@ public class AnmodningsRepository : IAnmodningRepo
             Category = annonce.Category,
             ImageUrl = annonce.ImageUrl,
             Location = annonce.Location,
-            SælgerId = annonce.SælgerId
+            SaelgerId = annonce.SaelgerId
         };
 
         //Insert i MineIndk�b collection
         
 
         // Auto-increment id (samme logik som f�r)
-        var last = mkøb.Find(Builders<MineIndkøb>.Filter.Empty)
-                      .SortByDescending(m => m.KøbId)
+        var last = mkob.Find(Builders<MineIndkob>.Filter.Empty)
+                      .SortByDescending(m => m.KobId)
                       .Limit(1)
                       .FirstOrDefault();
-        mineIndkøb.KøbId = (last?.KøbId ?? 0) + 1;
+        mineIndkob.KobId = (last?.KobId ?? 0) + 1;
 
-        mkøb.InsertOne(mineIndkøb);
+        mkob.InsertOne(mineIndkob);
 
         //Slet annoncen fra Annonce collection
         aAnnonce.DeleteOne(a => a.AnonnceId == annonceId);

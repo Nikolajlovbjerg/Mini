@@ -3,10 +3,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Core
 {
-    public class MineIndkøb
+    public class MineIndkob
     {
         [BsonId]
-        public int KøbId { get; set; } 
+        public int KobId { get; set; } 
         public int AnnonceId { get; set; }
         public int BrugerId { get; set; }
         public string? Title { get; set; }
@@ -15,7 +15,9 @@ namespace Core
         public string? Category { get; set; }
         public string? ImageUrl { get; set; }
         public string? Location { get; set; }
-        public int SælgerId { get; set; }
-        public DateTime KøbtDato { get; set; } = DateTime.UtcNow;
+
+        [BsonElement("SælgerId")]
+        public int SaelgerId { get; set; }
+        public DateTime KobtDato { get; set; } = DateTime.UtcNow;
     }
 }

@@ -5,32 +5,32 @@ using System.Collections.Generic;
 
 namespace Server.Repositories
 {
-    public class MineIndkøbRepository : IMineIndkøbRepo
+    public class MineIndkobRepository : IMineIndkobRepo
     {
-        private readonly IMongoCollection<MineIndkøb> _mkøb;
+        private readonly IMongoCollection<MineIndkob> _mkob;
 
-        public MineIndkøbRepository()
+        public MineIndkobRepository()
         {
             var mongoUri = $"mongodb+srv://tobiaskring111_db_user:{PASSWORD.superHemligPassword}@dbtest.adqud16.mongodb.net/";
             var client = new MongoClient(mongoUri);
             var database = client.GetDatabase("Genbrug");
-            _mkøb = database.GetCollection<MineIndkøb>("mineindkøb");
+            _mkob = database.GetCollection<MineIndkob>("mineindkob");
         }
 
-        public List<MineIndkøb> GetAll()
+        public List<MineIndkob> GetAll()
         {
-            return _mkøb.Find(_ => true).ToList();
+            return _mkob.Find(_ => true).ToList();
         }
 
-        public void Add(MineIndkøb køb)
+        public void Add(MineIndkob kob)
         {
-            var last = _mkøb.Find(Builders<MineIndkøb>.Filter.Empty)
-                            .SortByDescending(m => m.KøbId)
+            var last = _mkob.Find(Builders<MineIndkob>.Filter.Empty)
+                            .SortByDescending(m => m.KobId)
                             .Limit(1)
                             .FirstOrDefault();
-            køb.KøbId = (last?.KøbId ?? 0) + 1;
+            kob.KobId = (last?.KobId ?? 0) + 1;
 
-            _mkøb.InsertOne(køb);
+            _mkob.InsertOne(kob);
         }
     }
 }

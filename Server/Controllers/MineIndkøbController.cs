@@ -7,17 +7,17 @@ namespace Server.Controllers
 {
     [ApiController]
     [Route("api/mineindkob")]
-    public class MineIndkøbController : ControllerBase
+    public class MineIndkobController : ControllerBase
     {
-        private readonly IMineIndkøbRepo _repo;
+        private readonly IMineIndkobRepo _repo;
 
-        public MineIndkøbController(IMineIndkøbRepo repo)
+        public MineIndkobController(IMineIndkobRepo repo)
         {
             _repo = repo;
         }
 
         [HttpGet]
-        public IEnumerable<MineIndkøb> GetAll()
+        public IEnumerable<MineIndkob> GetAll()
         {
             return _repo.GetAll();
         }

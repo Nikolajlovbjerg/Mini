@@ -3,20 +3,20 @@
 
 <article class="annonce-row" role="listitem">
     <div class="thumb">
-        <img src="@Indkøb.ImageUrl" alt="@Indkøb?.Title" loading="lazy" />
+        <img src="@Indkob.ImageUrl" alt="@Indkob?.Title" loading="lazy" />
     </div>
 
     <div class="content">
-        <h3 class="title">@Indkøb?.Title</h3>
+        <h3 class="title">@Indkob?.Title</h3>
 
         <div class="subtitle">
             <span class="where">Marked</span>
-            <span class="price">til salg @Indkøb?.Price.ToString("N0") kr.</span>
+            <span class="price">til salg @Indkob?.Price.ToString("N0") kr.</span>
         </div>
     </div>
 </article>
 
 @code {
-    [Parameter] public MineIndkøb Indkøb { get; set; } = null;
+    [Parameter] public MineIndkob Indkob { get; set; } = null;
     
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Server.Repositories
 {
-    public interface IMineIndkøbRepo
+    public interface IMineIndkobRepo
     {
-        List<MineIndkøb> GetAll();
-        void Add(MineIndkøb køb);
+        List<MineIndkob> GetAll();
+        void Add(MineIndkob kob);
     }
 }

@@ -7,16 +7,16 @@
 <h3>Mine Indkøb</h3>
 
 
-@if (mineIndkøb == null )
+@if (mineIndkob == null )
 {
     <p>Ingen produkter</p>
 }
 else
 {
     <div class="d-flex flex-wrap">
-        @foreach (var p in mineIndkøb)
+        @foreach (var p in mineIndkob)
         {
-            <MineKøbComp Indkøb="p"/>
+            <MineKobComp Indkob="p"/>
         }
     </div>
 
@@ -24,7 +24,7 @@ else
 
 
 @code {
-    private List<MineIndkøb>? mineIndkøb;
+    private List<MineIndkob>? mineIndkob;
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,6 +34,6 @@ else
     private async Task LoadMineIndkøb()
     {
         // Skift URL til det endpoint, der returnerer dine køb
-        mineIndkøb = await Http.GetFromJsonAsync<List<MineIndkøb>>($"http://localhost:{PASSWORD.localPort}/api/mineindkob");
+        mineIndkob = await Http.GetFromJsonAsync<List<MineIndkob>>($"http://localhost:{PASSWORD.localPort}/api/mineindkob");
     }
 }
