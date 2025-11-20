@@ -6,15 +6,17 @@
 @inject HttpClient http
 
 
-<h3>Mine annoncer</h3>
+<div class="header-row">
+	<h3>Mine annoncer</h3>
 
-<button class="btn btn-primary" @onclick="GoToTilføjAnnoncePage"> 
-	Opret Ny Annonce
-</button>
+	<button class="opretbtn" @onclick="GoToTilføjAnnoncePage"> 
+		Opret Ny Annonce
+	</button>
+</div>
 
 @if (annoncer.Count == 0 )
 {
-	<p>No products</p>
+	<p>Ingen produkter</p>
 }
 else
 {

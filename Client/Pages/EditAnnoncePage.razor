@@ -32,7 +32,7 @@ else
         </div>
 
         <div class="col-md-6 mb-3">
-            <label for="Price">Category</label>
+            <label for="Price">Kategori</label>
             <InputSelect id="Category" @bind-Value="annonce.Category" class="form-control">
                 @foreach (var c in _catagories)
                 {
@@ -42,7 +42,7 @@ else
         </div>
 
         <div class="col-md-6 mb-3">
-            <label for="Price">Location</label>
+            <label for="Price">Lokation</label>
             <InputSelect id="Location" @bind-Value="annonce.Location" class="form-control">
                 @foreach (var l in _locations)
                 {
@@ -52,7 +52,7 @@ else
         </div>
 
         <div class="col-md-6 mb-3">
-            <label for="ImageUrl">Image URL</label>
+            <label for="ImageUrl">Billede URL</label>
             <InputText id="ImageUrl" @bind-Value="annonce.ImageUrl" class="form-control" />
         </div>
 

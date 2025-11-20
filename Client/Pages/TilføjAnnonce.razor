@@ -2,27 +2,27 @@
 @using Core
 @inject HttpClient Http
 
-<h3>TilføjAnnonce</h3>
+<h3>Opret en annonce</h3>
 
 <EditForm Model="@annonce" class="row p-3">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="col-md-12 mb-3">
-        <label for="Name">Name</label>
+        <label for="Titel">Titel:</label>
         <InputText 
                 id="Name" 
                 @bind-Value="annonce.Title" 
                 class="form-control"
-                placeholder="Insert Name"/>
+                placeholder="Indsæt titel"/>
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="Price">Price</label>
-        <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control" placeholder="Insert Price"/>
+        <label for="Pris">Pris:</label>
+        <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control" placeholder="Indsæt Pris"/>
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="Price">Category</label>
+        <label for="Kategori">Kategori:</label>
         <InputSelect id="Category" @bind-Value="annonce.Category" class="form-control">
             @foreach (var c in catagories)
             {
@@ -32,7 +32,7 @@
     </div>
     
     <div class="col-md-6 mb-3">
-        <label for="Price">Location</label>
+        <label for="Lokation">Lokation:</label>
         <InputSelect id="Location" @bind-Value="annonce.Location" class="form-control">
             @foreach (var l in locations)
             {
@@ -42,57 +42,38 @@
     </div>
     
     <div class="col-md-6 mb-3">
-        <label for="Name">Image</label>
-        <InputText id="Image" @bind-Value="annonce.ImageUrl" class="form-control" placeholder="Insert Image URL"/>
+        <label for="Billede">Billede:</label>
+        <InputText id="Image" @bind-Value="annonce.ImageUrl" class="form-control" placeholder="Indsæt billed URL"/>
     </div>
 
     <div class="col-md-12 mb-3">
-        <label for="Description">Description</label>
-        <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control" placeholder="Insert Description"/>
+        <label for="Beskrivelse">Beskrivelse:</label>
+        <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control" placeholder="Indsæt beskrivelse"/>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-3">
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-success" @onclick="OnClickAddProduct">Submit</button>
+            <button type="submit" class="btn btn-success" @onclick="OnClickAddProduct">Opret</button>
         </div>
     </div>
 </EditForm>
 
 @code {
 
-    private List<Annonce> annoncer = new();
-    
     private Annonce annonce = new();          
-    private string errorText = "";      
 
-    private string[] catagories = { "--Choose a category--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
-    private string[] locations = { "--Choose a location--", "SH-A1.06", "SH-A1.02" };
+    private string[] catagories = { "--Vælg en kategori--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
+    private string[] locations = { "--Vælg en kategori--", "SH-A1.06", "SH-A1.02" };
     
-    protected override async Task OnInitializedAsync()
-    {
-        annoncer = await Http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annonce");
-    }
-
     private async Task OnClickAddProduct()
     {
-        errorText = "";
-        try
-        {
             var response = await Http.PostAsJsonAsync("http://localhost:5044/api/annonce", annonce);
 
             if (response.IsSuccessStatusCode)
             {
-                // clear the form after successful create
+                // Den clear formularen, så man kan lave en ny
                 annonce = new Annonce();
             }
-            else
-            {
-                errorText = $"Kunne ikke oprette bruger (status { (int)response.StatusCode }).";
-            }
-        }
-        catch
-        {
-            errorText = "Fejl ved forbindelse til API'et.";
-        }
+            
     }
 }

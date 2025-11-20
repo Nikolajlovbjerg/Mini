@@ -79,7 +79,7 @@
 
 /* Buttons (generel) */
 .btn {
-    border-radius:8px;
+    border-radius:5px;
     padding:8px 14px;
     font-weight:600;
     cursor:pointer;

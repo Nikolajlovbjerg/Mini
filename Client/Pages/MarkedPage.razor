@@ -28,11 +28,11 @@
 
     @if (Annoncer.Count == 0)
     {
-      <p>No products</p>
+      <p>Ingen produkter</p>
     }
     else
     {
-      <MarkedGrid Annoncer="@Annoncer" />
+      <MarkedGrid Annoncer="@FilteredAnnoncer" />
     }
       
    
@@ -58,151 +58,4 @@
     {
       SelectedCategory = cat;
     }
-    
-    /*private List<Annonce> Annoncer = new()
-    {
-      new Annonce
-      {
-        AnonnceId = 1,
-        Title = "GO PRIS FOR HURTIG HANDEL. 2 IKEA Småstad...",
-        Description = "Kort beskrivelse — stand, mål eller andet.",
-        ImageUrl = "https://m.media-amazon.com/images/I/91TjRnsruRL._AC_UF350,350_QL80_.jpg",
-        Price = 800,
-        Category = "Møbler",
-        Status = "Aktiv",
-        SælgerId = 3,
-        BrugerId = 3,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      }
-    };*/
 }

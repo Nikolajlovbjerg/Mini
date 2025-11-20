@@ -56,6 +56,7 @@ Client/
     MainLayout.razor
     NavMenu.razor
   Pages/
+    EditAnnoncePage.razor
     Home.razor
     MarkedDetailPage.razor
     MarkedPage.razor
@@ -90,10 +91,8 @@ Server/
     AnnonceRepositoryMongoDb.cs
     BrugerRepo.cs
     IAnmodningRepo.cs
-    IAnnonceRepo.cs
     IAnnonceRepository.cs
     IBrugerRepo.cs
-    MongoDb.cs
   appsettings.Development.json
   appsettings.json
   Program.cs
@@ -150,29 +149,28 @@ Welcome to your new app.
 @page "/TilføjAnnonce"
 @using Core
 @inject HttpClient Http
-@using Client.Components
 
-<h3>TilføjAnnonce</h3>
+<h3>Opret en annonce</h3>
 
 <EditForm Model="@annonce" class="row p-3">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="col-md-12 mb-3">
-        <label for="Name">Name</label>
+        <label for="Titel">Titel:</label>
         <InputText 
                 id="Name" 
                 @bind-Value="annonce.Title" 
                 class="form-control"
-                placeholder="Insert Name"/>
+                placeholder="Indsæt titel"/>
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="Price">Price</label>
-        <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control" placeholder="Insert Price"/>
+        <label for="Pris">Pris:</label>
+        <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control" placeholder="Indsæt Pris"/>
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="Price">Category</label>
+        <label for="Kategori">Kategori:</label>
         <InputSelect id="Category" @bind-Value="annonce.Category" class="form-control">
             @foreach (var c in catagories)
             {
@@ -182,7 +180,7 @@ Welcome to your new app.
     </div>
     
     <div class="col-md-6 mb-3">
-        <label for="Price">Location</label>
+        <label for="Lokation">Lokation:</label>
         <InputSelect id="Location" @bind-Value="annonce.Location" class="form-control">
             @foreach (var l in locations)
             {
@@ -192,58 +190,39 @@ Welcome to your new app.
     </div>
     
     <div class="col-md-6 mb-3">
-        <label for="Name">Image</label>
-        <InputText id="Image" @bind-Value="annonce.ImageUrl" class="form-control" placeholder="Insert Image URL"/>
+        <label for="Billede">Billede:</label>
+        <InputText id="Image" @bind-Value="annonce.ImageUrl" class="form-control" placeholder="Indsæt billed URL"/>
     </div>
 
     <div class="col-md-12 mb-3">
-        <label for="Description">Description</label>
-        <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control" placeholder="Insert Description"/>
+        <label for="Beskrivelse">Beskrivelse:</label>
+        <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control" placeholder="Indsæt beskrivelse"/>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-3">
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-success" @onclick="OnClickAddProduct">Submit</button>
+            <button type="submit" class="btn btn-success" @onclick="OnClickAddProduct">Opret</button>
         </div>
     </div>
 </EditForm>
 
 @code {
 
-    private List<Annonce> annoncer = new();
-    
     private Annonce annonce = new();          
-    private string errorText = "";      
 
-    private string[] catagories = { "--Choose a category--", "Elektronik", "Bil", "Møbler", "Tøj", "Kunst", "Have" };
-    private string[] locations = { "--Choose a location--", "SH-A1.06", "SH-A1.02" };
+    private string[] catagories = { "--Vælg en kategori--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
+    private string[] locations = { "--Vælg en kategori--", "SH-A1.06", "SH-A1.02" };
     
-    protected override async Task OnInitializedAsync()
-    {
-        annoncer = await Http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annonce");
-    }
-
     private async Task OnClickAddProduct()
     {
-        errorText = "";
-        try
-        {
             var response = await Http.PostAsJsonAsync("http://localhost:5044/api/annonce", annonce);
 
             if (response.IsSuccessStatusCode)
             {
-                // clear the form after successful create
+                // Den clear formularen, så man kan lave en ny
                 annonce = new Annonce();
             }
-            else
-            {
-                errorText = $"Kunne ikke oprette bruger (status { (int)response.StatusCode }).";
-            }
-        }
-        catch
-        {
-            errorText = "Fejl ved forbindelse til API'et.";
-        }
+            
     }
 }
 </file>
@@ -430,121 +409,6 @@ public class WeatherForecastController : ControllerBase
 }
 </file>
 
-<file path="Client/Components/Marked/MarkedDetailsComponent.razor">
-@using Core
-
-<div class="product-detail container-xl">
-  
-  @if (Annonce != null)
-  {
-    <div class="gallery">
-      <div class="main-image">
-        <img src="@Annonce.ImageUrl" alt="@Annonce?.Title" loading="lazy"/>
-      </div>
-    </div>
-
-
-    <aside class="details">
-      <h1 class="title">@Annonce?.Title</h1>
-      <span class="price">@Annonce?.Price.ToString("N0") kr.</span>
-      <div class="desc">
-        @if (!string.IsNullOrWhiteSpace(Annonce?.Description))
-        {
-          <p>@Annonce.Description</p>
-        }
-      </div>
-      <div class="actions">
-        <button class="btn primary" @onclick="OnSendMessage">Andmod om køb</button>
-      </div>
-      <dl class="meta-list">
-        <dt>Sælger</dt><dd>@Annonce?.SælgerId</dd>
-        <dt>Lokation</dt><dd>@Annonce?.Location</dd>
-        <dt>Kategori</dt><dd>@Annonce?.Category</dd>
-      </dl>
-    </aside>
-  }
-</div >
-      
-
-  @code {
-    [Parameter] public Annonce? Annonce { get; set; }
-
-    
-    
-
-    private void OnSendMessage()
-    {
-        Console.WriteLine($"Send besked for annonce {Annonce?.AnonnceId}");
-    }
-
-   
-}
-</file>
-
-<file path="Client/Components/Marked/MarkedFilter.razor">
-@namespace Client.Components.Marked
-
-<div class="categories" role="navigation" aria-label="Kategorier">
-    
-    <button class='category @(Selected == "Elektronik" ? "active" : "")' 
-            @onclick='() => SelectCategory("Elektronik")'>
-        <div class="icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M4 5V16H20V5H4ZM2 4.00748C2 3.45107 2.45531 3 2.9918 3H21.0082C21.556 3 22 3.44892 22 4.00748V18H2V4.00748ZM1 19H23V21H1V19Z"></path></svg>
-        </div>
-        <div>Elektronik</div>
-    </button>
-
-    <button class='category @(Selected == "Bil" ? "active" : "")' @onclick='() => SelectCategory("Bil")'>
-        <div class="icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18" height="18"><path d="M19 20H5V21C5 21.5523 4.55228 22 4 22H3C2.44772 22 2 21.5523 2 21V13.5L0.757464 13.1894C0.312297 13.0781 0 12.6781 0 12.2192V11.5C0 11.2239 0.223858 11 0.5 11H2L4.4805 5.21216C4.79566 4.47679 5.51874 4 6.31879 4H17.6812C18.4813 4 19.2043 4.47679 19.5195 5.21216L22 11H23.5C23.7761 11 24 11.2239 24 11.5V12.2192C24 12.6781 23.6877 13.0781 23.2425 13.1894L22 13.5V21C22 21.5523 21.5523 22 21 22H20C19.4477 22 19 21.5523 19 21V20ZM20 18V13H4V18H20ZM5.47703 11H18.523C18.6502 11 18.7762 10.9757 18.8944 10.9285C19.4071 10.7234 19.6566 10.1414 19.4514 9.62861L18 6H6L4.54856 9.62861C4.50131 9.74673 4.47703 9.87278 4.47703 10C4.47703 10.5523 4.92475 11 5.47703 11ZM5 14C7.31672 14 8.87868 14.7548 9.68588 16.2643L9.68582 16.2643C9.81602 16.5078 9.72418 16.8107 9.4807 16.9409C9.40818 16.9797 9.3272 17 9.24496 17H6C5.44772 17 5 16.5523 5 16V14ZM19 14V16C19 16.5523 18.5523 17 18 17H14.755C14.6728 17 14.5918 16.9797 14.5193 16.9409C14.2758 16.8107 14.184 16.5078 14.3142 16.2643L14.3141 16.2643C15.1213 14.7548 16.6833 14 19 14Z"></path></svg>
-        </div>
-        <div>Bil</div>
-    </button>
-    
-    <button class='category @(Selected == "Møbler" ? "active" : "")' @onclick='() => SelectCategory("Møbler")'>
-        <div class="icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M8 3C5.79086 3 4 4.79086 4 7V9.12602C2.27477 9.57006 1 11.1362 1 13C1 14.4817 1.8052 15.7734 3 16.4646V19V21H5V20H19V21H21V19V16.4646C22.1948 15.7734 23 14.4817 23 13C23 11.1362 21.7252 9.57006 20 9.12602V7C20 4.79086 18.2091 3 16 3H8ZM18 9.12602C16.2748 9.57006 15 11.1362 15 13H9C9 11.1362 7.72523 9.57006 6 9.12602V7C6 5.89543 6.89543 5 8 5H16C17.1046 5 18 5.89543 18 7V9.12602ZM9 15H15V16H17V13C17 11.8954 17.8954 11 19 11C20.1046 11 21 11.8954 21 13C21 13.8693 20.4449 14.6114 19.6668 14.8865C19.2672 15.0277 19 15.4055 19 15.8293V18H5V15.8293C5 15.4055 4.73284 15.0277 4.33325 14.8865C3.5551 14.6114 3 13.8693 3 13C3 11.8954 3.89543 11 5 11C6.10457 11 7 11.8954 7 13V16H9V15Z"></path></svg>
-        </div>
-        <div>Møbler</div>
-    </button>
-    
-    <button class='category @(Selected == "Tøj" ? "active" : "")' @onclick='() => SelectCategory("Tøj")'>
-        <div class="icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M8.99805 3C8.99805 4.65685 10.3412 6 11.998 6C13.6549 6 14.998 4.65685 14.998 3H20.998C21.5503 3 21.998 3.44772 21.998 4V11C21.998 11.5523 21.5503 12 20.998 12H18.997L18.998 20C18.998 20.5523 18.5503 21 17.998 21H5.99805C5.44576 21 4.99805 20.5523 4.99805 20L4.99705 11.999L2.99805 12C2.44576 12 1.99805 11.5523 1.99805 11V4C1.99805 3.44772 2.44576 3 2.99805 3H8.99805ZM19.998 4.999H16.581L16.5642 5.04018C15.8115 6.7223 14.1566 7.91251 12.2149 7.99538L11.998 8C9.96331 8 8.21245 6.7846 7.43186 5.04018L7.41405 4.999H3.99805V9.999L6.9968 9.998L6.99705 19H16.998L16.9968 10L19.998 9.999V4.999Z"></path></svg>
-        </div>
-        <div>Tøj</div>
-    </button>
-    
-    <button class='category @(Selected == "Kunst" ? "active" : "")' @onclick='() => SelectCategory("Kunst")'>
-        <div class="icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M15.5257 3.52562C16.8925 2.15878 19.1081 2.15878 20.475 3.52562C21.8415 4.89249 21.8417 7.10812 20.475 8.47487L20.3041 8.64675C20.1088 8.84201 20.1088 9.15852 20.3041 9.35379L20.475 9.52566C21.8415 10.8925 21.8417 13.1082 20.475 14.4749L20.3041 14.6468C20.1088 14.8421 20.1088 15.1586 20.3041 15.3538L20.475 15.5257C21.8415 16.8926 21.8417 19.1082 20.475 20.475C19.1082 21.8417 16.8926 21.8415 15.5257 20.475L15.3538 20.3041C15.1586 20.1088 14.8421 20.1088 14.6468 20.3041L14.4749 20.475C13.1082 21.8417 10.8925 21.8415 9.52566 20.475L9.35379 20.3041C9.15852 20.1088 8.84201 20.1088 8.64675 20.3041L8.47487 20.475C7.10812 21.8417 4.89249 21.8415 3.52562 20.475C2.15878 19.1081 2.15878 16.8925 3.52562 15.5257L3.69652 15.3538C3.8917 15.1587 3.89152 14.8421 3.69652 14.6468L3.52562 14.4749C2.15878 13.1081 2.15878 10.8925 3.52562 9.52566L3.69652 9.35379C3.8917 9.15861 3.89152 8.84204 3.69652 8.64675L3.52562 8.47487C2.15878 7.10803 2.15878 4.89247 3.52562 3.52562C4.89247 2.15878 7.10803 2.15878 8.47487 3.52562L8.64675 3.69652C8.84204 3.89152 9.15861 3.8917 9.35379 3.69652L9.52566 3.52562C10.8925 2.15878 13.1081 2.15878 14.4749 3.52562L14.6468 3.69652C14.8421 3.89152 15.1587 3.8917 15.3538 3.69652L15.5257 3.52562ZM19.0609 4.93969C18.4751 4.3539 17.5256 4.3539 16.9398 4.93969L16.7679 5.11157C15.7917 6.0874 14.209 6.08722 13.2327 5.11157L13.0608 4.93969C12.4751 4.3539 11.5255 4.3539 10.9397 4.93969L10.7679 5.11157C9.79171 6.0874 8.20894 6.08722 7.23268 5.11157L7.0608 4.93969C6.47501 4.3539 5.52548 4.3539 4.93969 4.93969C4.3539 5.52548 4.3539 6.47501 4.93969 7.0608L5.11157 7.23268C6.08722 8.20894 6.0874 9.79171 5.11157 10.7679L4.93969 10.9397C4.3539 11.5255 4.3539 12.4751 4.93969 13.0608L5.11157 13.2327C6.08722 14.209 6.0874 15.7917 5.11157 16.7679L4.93969 16.9398C4.3539 17.5256 4.3539 18.4751 4.93969 19.0609C5.52551 19.6464 6.4751 19.6466 7.0608 19.0609L7.23268 18.889C8.20892 17.9131 9.79162 17.9131 10.7679 18.889L10.9397 19.0609C11.5255 19.6464 12.4751 19.6466 13.0608 19.0609L13.2327 18.889C14.209 17.9131 15.7917 17.9131 16.7679 18.889L16.9398 19.0609C17.5256 19.6464 18.4752 19.6466 19.0609 19.0609C19.6466 18.4752 19.6464 17.5256 19.0609 16.9398L18.889 16.7679C17.9131 15.7917 17.9131 14.209 18.889 13.2327L19.0609 13.0608C19.6466 12.4751 19.6464 11.5255 19.0609 10.9397L18.889 10.7679C17.9131 9.79162 17.9131 8.20892 18.889 7.23268L19.0609 7.0608C19.6466 6.4751 19.6464 5.52551 19.0609 4.93969ZM14.5003 7.50026C15.6048 7.5004 16.5003 8.39578 16.5003 9.50027V14.5003C16.5002 15.6047 15.6047 16.5002 14.5003 16.5003H9.50027C8.39578 16.5003 7.5004 15.6048 7.50026 14.5003V9.50027C7.50026 8.3957 8.3957 7.50026 9.50027 7.50026H14.5003ZM9.50027 14.5003H14.5003V9.50027H9.50027V14.5003Z"></path></svg>
-        </div>
-        <div>Kunst</div>
-    </button>
-    
-    <button class='category @(Selected == "Have" ? "active" : "")' 
-            @onclick='() => SelectCategory("Have")'>
-        <div class="icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M6 7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7C18 7.26214 17.9831 7.5207 17.9504 7.77457C19.77 8.80413 21 10.7575 21 13C21 16.3137 18.3137 19 15 19H13V22H11V19H8.5C5.46243 19 3 16.5376 3 13.5C3 11.2863 4.30712 9.37966 6.19098 8.50704C6.06635 8.02551 6 7.52039 6 7ZM7.00964 10.3319C5.82176 10.8918 5 12.1008 5 13.5C5 15.433 6.567 17 8.5 17H15C17.2091 17 19 15.2091 19 13C19 11.3056 17.9461 9.85488 16.4544 9.27234L15.6129 8.94372C15.7907 8.30337 16 7.67183 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 8.30783 8.6266 9.46903 9.60019 10.2005L8.39884 11.7995C7.85767 11.3929 7.38716 10.8963 7.00964 10.3319Z"></path></svg>
-        </div>
-        <div>Have</div>
-    </button>
-
-    
-</div>
-
-@code {
-    [Parameter] public string Selected { get; set; } = "Alle";
-    [Parameter] public EventCallback<string> SelectedChanged { get; set; }
-
-    private async Task SelectCategory(string cat)
-    {
-        Selected = cat;
-        await SelectedChanged.InvokeAsync(cat);
-    }
-}
-</file>
-
 <file path="Client/Components/Marked/MarkedGrid.razor">
 @using Core
 
@@ -586,45 +450,6 @@ public class WeatherForecastController : ControllerBase
     protected override async Task OnInitializedAsync()
     {
         annonce = await Http.GetFromJsonAsync<Annonce>($"http://localhost:{PASSWORD.localPort}/api/annonce/{AnnonceId}");
-    }
-}
-</file>
-
-<file path="Client/Pages/MineAnmodninger.razor">
-@page "/mine-anmodninger"
-@inject HttpClient Http
-@using Core;
-
-<h3>Mine Anmodninger</h3>
-
-@if (anmodninger == null)
-{
-    <p>Henter...</p>
-}
-else if (!anmodninger.Any())
-{
-    <p>Ingen anmodninger endnu.</p>
-}
-else
-{
-    <ul>
-        @foreach (var a in anmodninger)
-        {
-            <li>
-                <b>@a.AnnonceId</b> — @a.Status — @a.Date
-            </li>
-        }
-    </ul>
-}
-
-@code {
-    private List<Anmodning>? anmodninger;
-
-    protected override async Task OnInitializedAsync()
-    {
-        anmodninger = await Http.GetFromJsonAsync<List<Anmodning>>(
-            "http://localhost:5044/api/anmodning"
-        );
     }
 }
 </file>
@@ -725,16 +550,6 @@ namespace Server.Controllers
 }
 </file>
 
-<file path="Server/Repositories/IAnnonceRepository.cs">
-using Core;
-namespace Server.Repositories;
-public interface IAnnonceRepository
-{
-    List<Annonce> GetAll();
-    void Add(Annonce annonce);
-}
-</file>
-
 <file path="Server/Repositories/IBrugerRepo.cs">
 using System;
 using Core;
@@ -792,6 +607,152 @@ namespace Server.Repositories
             return Task.CompletedTask;
     }
 
+}
+</file>
+
+<file path="Client/Components/Marked/MarkedDetailsComponent.razor">
+@using Core
+@using PW1
+@inject HttpClient http
+
+<div class="product-detail container-xl">
+  
+  @if (Annonce != null)
+  {
+    <div class="gallery">
+      <div class="main-image">
+        <img src="@Annonce.ImageUrl" alt="@Annonce?.Title" loading="lazy"/>
+      </div>
+    </div>
+
+
+    <aside class="details">
+      <h1 class="title">@Annonce?.Title</h1>
+      <span class="price">@Annonce?.Price.ToString("N0") kr.</span>
+      <div class="desc">
+        @if (!string.IsNullOrWhiteSpace(Annonce?.Description))
+        {
+          <p>@Annonce.Description</p>
+        }
+      </div>
+      <div class="actions">
+        <button class="btn primary" @onclick="() => OnSendMessage(Annonce)">Andmod om køb</button>
+      </div>
+      <dl class="meta-list">
+        <dt>Sælger</dt><dd>@Annonce?.SælgerId</dd>
+        <dt>Lokation</dt><dd>@Annonce?.Location</dd>
+        <dt>Kategori</dt><dd>@Annonce?.Category</dd>
+      </dl>
+    </aside>
+  }
+</div >
+    
+    
+    
+
+@code {
+    [Parameter] public Annonce? Annonce { get; set; }
+    private List<Anmodning> mineAnmodninger = new();
+
+
+
+
+    private async Task OnSendMessage(Annonce annonce)
+    {
+        var req = new Anmodning
+            {
+                BrugerId = 1,
+                AnnonceId = annonce.AnonnceId,
+                Date = DateTime.UtcNow,
+                Status = "pending"
+            };
+
+            await http.PostAsJsonAsync($"http://localhost:{PASSWORD.localPort}/api/anmodning", req);
+            mineAnmodninger.Add(req);
+
+    }
+
+   
+}
+</file>
+
+<file path="Client/Components/Marked/MarkedFilter.razor">
+@namespace Client.Components.Marked
+
+<div class="categories" role="navigation" aria-label="Kategorier">
+    
+    <button class='category @(Selected == "Elektronik" ? "active" : "")' 
+            @onclick='() => SelectCategory("Elektronik")'>
+        <div class="icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M4 5V16H20V5H4ZM2 4.00748C2 3.45107 2.45531 3 2.9918 3H21.0082C21.556 3 22 3.44892 22 4.00748V18H2V4.00748ZM1 19H23V21H1V19Z"></path></svg>
+        </div>
+        <div>Elektronik</div>
+    </button>
+
+    <button class='category @(Selected == "Sport" ? "active" : "")' @onclick='() => SelectCategory("Sport")'>
+        <div class="icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM13.6695 15.9999H10.3295L8.95053 17.8969L9.5044 19.6031C10.2897 19.8607 11.1286 20 12 20C12.8714 20 13.7103 19.8607 14.4956 19.6031L15.0485 17.8969L13.6695 15.9999ZM5.29354 10.8719L4.00222 11.8095L4 12C4 13.7297 4.54894 15.3312 5.4821 16.6397L7.39254 16.6399L8.71453 14.8199L7.68654 11.6499L5.29354 10.8719ZM18.7055 10.8719L16.3125 11.6499L15.2845 14.8199L16.6065 16.6399L18.5179 16.6397C19.4511 15.3312 20 13.7297 20 12L19.997 11.81L18.7055 10.8719ZM12 9.536L9.656 11.238L10.552 14H13.447L14.343 11.238L12 9.536ZM14.2914 4.33299L12.9995 5.27293V7.78993L15.6935 9.74693L17.9325 9.01993L18.4867 7.3168C17.467 5.90685 15.9988 4.84254 14.2914 4.33299ZM9.70757 4.33329C8.00021 4.84307 6.53216 5.90762 5.51261 7.31778L6.06653 9.01993L8.30554 9.74693L10.9995 7.78993V5.27293L9.70757 4.33329Z"></path></svg>
+        </div>
+        <div>Sport</div>
+    </button>
+    
+    <button class='category @(Selected == "Møbler" ? "active" : "")' @onclick='() => SelectCategory("Møbler")'>
+        <div class="icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M8 3C5.79086 3 4 4.79086 4 7V9.12602C2.27477 9.57006 1 11.1362 1 13C1 14.4817 1.8052 15.7734 3 16.4646V19V21H5V20H19V21H21V19V16.4646C22.1948 15.7734 23 14.4817 23 13C23 11.1362 21.7252 9.57006 20 9.12602V7C20 4.79086 18.2091 3 16 3H8ZM18 9.12602C16.2748 9.57006 15 11.1362 15 13H9C9 11.1362 7.72523 9.57006 6 9.12602V7C6 5.89543 6.89543 5 8 5H16C17.1046 5 18 5.89543 18 7V9.12602ZM9 15H15V16H17V13C17 11.8954 17.8954 11 19 11C20.1046 11 21 11.8954 21 13C21 13.8693 20.4449 14.6114 19.6668 14.8865C19.2672 15.0277 19 15.4055 19 15.8293V18H5V15.8293C5 15.4055 4.73284 15.0277 4.33325 14.8865C3.5551 14.6114 3 13.8693 3 13C3 11.8954 3.89543 11 5 11C6.10457 11 7 11.8954 7 13V16H9V15Z"></path></svg>
+        </div>
+        <div>Møbler</div>
+    </button>
+    
+    <button class='category @(Selected == "Tøj & mode" ? "active" : "")' @onclick='() => SelectCategory("Tøj & mode")'>
+        <div class="icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M8.99805 3C8.99805 4.65685 10.3412 6 11.998 6C13.6549 6 14.998 4.65685 14.998 3H20.998C21.5503 3 21.998 3.44772 21.998 4V11C21.998 11.5523 21.5503 12 20.998 12H18.997L18.998 20C18.998 20.5523 18.5503 21 17.998 21H5.99805C5.44576 21 4.99805 20.5523 4.99805 20L4.99705 11.999L2.99805 12C2.44576 12 1.99805 11.5523 1.99805 11V4C1.99805 3.44772 2.44576 3 2.99805 3H8.99805ZM19.998 4.999H16.581L16.5642 5.04018C15.8115 6.7223 14.1566 7.91251 12.2149 7.99538L11.998 8C9.96331 8 8.21245 6.7846 7.43186 5.04018L7.41405 4.999H3.99805V9.999L6.9968 9.998L6.99705 19H16.998L16.9968 10L19.998 9.999V4.999Z"></path></svg>
+        </div>
+        <div>Tøj & mode</div>
+    </button>
+    
+    <button class='category @(Selected == "Kunst" ? "active" : "")' @onclick='() => SelectCategory("Kunst")'>
+        <div class="icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M15.5257 3.52562C16.8925 2.15878 19.1081 2.15878 20.475 3.52562C21.8415 4.89249 21.8417 7.10812 20.475 8.47487L20.3041 8.64675C20.1088 8.84201 20.1088 9.15852 20.3041 9.35379L20.475 9.52566C21.8415 10.8925 21.8417 13.1082 20.475 14.4749L20.3041 14.6468C20.1088 14.8421 20.1088 15.1586 20.3041 15.3538L20.475 15.5257C21.8415 16.8926 21.8417 19.1082 20.475 20.475C19.1082 21.8417 16.8926 21.8415 15.5257 20.475L15.3538 20.3041C15.1586 20.1088 14.8421 20.1088 14.6468 20.3041L14.4749 20.475C13.1082 21.8417 10.8925 21.8415 9.52566 20.475L9.35379 20.3041C9.15852 20.1088 8.84201 20.1088 8.64675 20.3041L8.47487 20.475C7.10812 21.8417 4.89249 21.8415 3.52562 20.475C2.15878 19.1081 2.15878 16.8925 3.52562 15.5257L3.69652 15.3538C3.8917 15.1587 3.89152 14.8421 3.69652 14.6468L3.52562 14.4749C2.15878 13.1081 2.15878 10.8925 3.52562 9.52566L3.69652 9.35379C3.8917 9.15861 3.89152 8.84204 3.69652 8.64675L3.52562 8.47487C2.15878 7.10803 2.15878 4.89247 3.52562 3.52562C4.89247 2.15878 7.10803 2.15878 8.47487 3.52562L8.64675 3.69652C8.84204 3.89152 9.15861 3.8917 9.35379 3.69652L9.52566 3.52562C10.8925 2.15878 13.1081 2.15878 14.4749 3.52562L14.6468 3.69652C14.8421 3.89152 15.1587 3.8917 15.3538 3.69652L15.5257 3.52562ZM19.0609 4.93969C18.4751 4.3539 17.5256 4.3539 16.9398 4.93969L16.7679 5.11157C15.7917 6.0874 14.209 6.08722 13.2327 5.11157L13.0608 4.93969C12.4751 4.3539 11.5255 4.3539 10.9397 4.93969L10.7679 5.11157C9.79171 6.0874 8.20894 6.08722 7.23268 5.11157L7.0608 4.93969C6.47501 4.3539 5.52548 4.3539 4.93969 4.93969C4.3539 5.52548 4.3539 6.47501 4.93969 7.0608L5.11157 7.23268C6.08722 8.20894 6.0874 9.79171 5.11157 10.7679L4.93969 10.9397C4.3539 11.5255 4.3539 12.4751 4.93969 13.0608L5.11157 13.2327C6.08722 14.209 6.0874 15.7917 5.11157 16.7679L4.93969 16.9398C4.3539 17.5256 4.3539 18.4751 4.93969 19.0609C5.52551 19.6464 6.4751 19.6466 7.0608 19.0609L7.23268 18.889C8.20892 17.9131 9.79162 17.9131 10.7679 18.889L10.9397 19.0609C11.5255 19.6464 12.4751 19.6466 13.0608 19.0609L13.2327 18.889C14.209 17.9131 15.7917 17.9131 16.7679 18.889L16.9398 19.0609C17.5256 19.6464 18.4752 19.6466 19.0609 19.0609C19.6466 18.4752 19.6464 17.5256 19.0609 16.9398L18.889 16.7679C17.9131 15.7917 17.9131 14.209 18.889 13.2327L19.0609 13.0608C19.6466 12.4751 19.6464 11.5255 19.0609 10.9397L18.889 10.7679C17.9131 9.79162 17.9131 8.20892 18.889 7.23268L19.0609 7.0608C19.6466 6.4751 19.6464 5.52551 19.0609 4.93969ZM14.5003 7.50026C15.6048 7.5004 16.5003 8.39578 16.5003 9.50027V14.5003C16.5002 15.6047 15.6047 16.5002 14.5003 16.5003H9.50027C8.39578 16.5003 7.5004 15.6048 7.50026 14.5003V9.50027C7.50026 8.3957 8.3957 7.50026 9.50027 7.50026H14.5003ZM9.50027 14.5003H14.5003V9.50027H9.50027V14.5003Z"></path></svg>
+        </div>
+        <div>Kunst</div>
+    </button>
+    
+    <button class='category @(Selected == "Have" ? "active" : "")' 
+            @onclick='() => SelectCategory("Have")'>
+        <div class="icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M6 7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7C18 7.26214 17.9831 7.5207 17.9504 7.77457C19.77 8.80413 21 10.7575 21 13C21 16.3137 18.3137 19 15 19H13V22H11V19H8.5C5.46243 19 3 16.5376 3 13.5C3 11.2863 4.30712 9.37966 6.19098 8.50704C6.06635 8.02551 6 7.52039 6 7ZM7.00964 10.3319C5.82176 10.8918 5 12.1008 5 13.5C5 15.433 6.567 17 8.5 17H15C17.2091 17 19 15.2091 19 13C19 11.3056 17.9461 9.85488 16.4544 9.27234L15.6129 8.94372C15.7907 8.30337 16 7.67183 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 8.30783 8.6266 9.46903 9.60019 10.2005L8.39884 11.7995C7.85767 11.3929 7.38716 10.8963 7.00964 10.3319Z"></path></svg>
+        </div>
+        <div>Have</div>
+    </button>
+    
+    <button class='category @(Selected == "Bøger" ? "active" : "")' 
+            @onclick='() => SelectCategory("Bøger")'>
+        <div class="icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M13 21V23H11V21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H9C10.1947 3 11.2671 3.52375 12 4.35418C12.7329 3.52375 13.8053 3 15 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H13ZM20 19V5H15C13.8954 5 13 5.89543 13 7V19H20ZM11 19V7C11 5.89543 10.1046 5 9 5H4V19H11Z"></path></svg>
+        </div>
+        <div>Bøger</div>
+    </button>
+    
+    <button class='category @(Selected == "Bolig/reno" ? "active" : "")' 
+            @onclick='() => SelectCategory("Bolig/reno")'>
+        <div class="icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"width="18"height="18"><path d="M19 21H5C4.44772 21 4 20.5523 4 20V11L1 11L11.3273 1.6115C11.7087 1.26475 12.2913 1.26475 12.6727 1.6115L23 11L20 11V20C20 20.5523 19.5523 21 19 21ZM13 19H18V9.15745L12 3.7029L6 9.15745V19H11V13H13V19Z"></path></svg>
+        </div>
+        <div>Bolig/reno</div>
+    </button>
+
+    
+</div>
+
+@code {
+    [Parameter] public string Selected { get; set; } = "Alle";
+    [Parameter] public EventCallback<string> SelectedChanged { get; set; }
+
+    private async Task SelectCategory(string cat)
+    {
+        Selected = cat;
+        await SelectedChanged.InvokeAsync(cat);
+    }
 }
 </file>
 
@@ -870,6 +831,107 @@ namespace Server.Repositories
 }
 </file>
 
+<file path="Client/Pages/EditAnnoncePage.razor">
+@page "/annoncer/edit/{AnnonceId:int}"
+@using Core
+@inject HttpClient http
+@inject NavigationManager Nav
+@using Client.PW1
+
+<h1>Rediger annonce</h1>
+
+@if (annonce == null)
+{
+    <p>Henter annonce...</p>
+}
+else
+{
+    <EditForm Model="@annonce" OnValidSubmit="HandleSubmit" class="row p-3">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="col-md-12 mb-3">
+            <label for="Title">Titel</label>
+            <InputText id="Title" @bind-Value="annonce.Title" class="form-control" />
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label for="Description">Beskrivelse</label>
+            <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Price">Pris</label>
+            <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Price">Kategori</label>
+            <InputSelect id="Category" @bind-Value="annonce.Category" class="form-control">
+                @foreach (var c in _catagories)
+                {
+                    <option value="@c">@c</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Price">Lokation</label>
+            <InputSelect id="Location" @bind-Value="annonce.Location" class="form-control">
+                @foreach (var l in _locations)
+                {
+                    <option value="@l">@l</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="ImageUrl">Billede URL</label>
+            <InputText id="ImageUrl" @bind-Value="annonce.ImageUrl" class="form-control" />
+        </div>
+
+        <div class="col-12 mb-3">
+            <button type="submit" class="btn btn-primary">Gem ændringer</button>
+            <button type="button" class="btn btn-secondary ms-2" @onclick="Cancel">Annuller</button>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int AnnonceId { get; set; }
+
+    private Annonce? annonce;
+    
+    private string[] _catagories = { "--Choose a category--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
+    private string[] _locations = { "--Choose a location--", "SH-A1.06", "SH-A1.02" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        annonce = await http.GetFromJsonAsync<Annonce>($"http://localhost:{PASSWORD.localPort}/api/annonce/{AnnonceId}");
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (annonce == null) return;
+        
+        var res = await http.PutAsJsonAsync($"http://localhost:{PASSWORD.localPort}/api/annonce/{AnnonceId}", annonce);
+        if (res.IsSuccessStatusCode)
+        {
+            Nav.NavigateTo("/annoncer");
+        }
+        else
+        {
+            Console.WriteLine($"Fejl ved opdatering: {(int)res.StatusCode}");
+        }
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/annoncer");
+    }
+}
+</file>
+
 <file path="Client/Service/BrugerServiceHttp.cs">
 using System.Net.Http.Json;
 using Core;
@@ -904,38 +966,6 @@ namespace Client.Service
     public class Server
     {
         public static string Url = "http://localhost:5044";
-    }
-}
-</file>
-
-<file path="Server/Repositories/AnnonceRepositoryMongoDb.cs">
-using MongoDB.Driver;
-using Core;
-using Server.PW1;
-namespace Server.Repositories;
-public class AnnonceRepositoryMongoDb : IAnnonceRepository
-{
-    private readonly IMongoCollection<Annonce> aAnnonce;
-    public AnnonceRepositoryMongoDb()
-    {
-        var mongoUri = $"mongodb+srv://tobiaskring111_db_user:{PASSWORD.superHemligPassword}@dbtest.adqud16.mongodb.net/";
-        var client = new MongoClient(mongoUri);
-        var database = client.GetDatabase("Genbrug");
-        aAnnonce = database.GetCollection<Annonce>("Annonce");
-    }
-    public List<Annonce> GetAll()
-    {
-        return aAnnonce.Find(_  => true).ToList();
-    }
-    public void Add(Annonce annonce)
-    {
-        var lastAnnonce = aAnnonce
-            .Find(Builders<Annonce>.Filter.Empty)
-            .SortByDescending(a => a.AnonnceId)
-            .Limit(1)
-            .FirstOrDefault();
-        annonce.AnonnceId = (lastAnnonce?.AnonnceId ?? 0) + 1;
-        aAnnonce.InsertOne(annonce);
     }
 }
 </file>
@@ -979,71 +1009,44 @@ namespace Server.Repositories
 }
 </file>
 
-<file path="Client/Pages/OpretBruger.razor">
-@page "/addbruger"
-@using Client.Service
-@using Core
-@inject HttpClient http
-@inject NavigationManager navMan
-@inject IBrugerService brugerService
+<file path="Client/Pages/MineAnmodninger.razor">
+@page "/mine-anmodninger/{AnnonceId:int}"
+@inject HttpClient Http
+@using Core;
+@using PW1
 
-<PageTitle>Add User</PageTitle>
+<h3>Mine Anmodninger</h3>
 
-<h3>Add User</h3>
-
-<EditForm Model="@_bruger" class="row p-3" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="col-md-12 mb-3">
-        <label for="Name">Name:</label>
-        <InputText id="Name" @bind-Value="_bruger.Name" class="form-control" placeholder="Navn"/>
-    </div>
-    <div class="col-md-12 mb-3">
-        <label for="Email">Email:</label>
-        <InputText id="Email" @bind-Value="_bruger.Email" class="form-control" placeholder="Email"/>
-    </div>
-    <div class="col-md-12 mb-3">
-        <label for="pwd">Adgangskode:</label>
-        <InputText id="pwd"
-                   type="@PasswordType"
-                   class="form-control"
-                   @bind-Value="_bruger.Password"
-                   placeholder="Adgangskode"/>
-        <i class="bi bi-eye" @onclick="ToggleAdgangskodeVisibility"></i>
-    </div>
-    <div class="col-md-12 mb-3">
-        <label for="Phone">Telefon nummer:</label>
-        <InputText id="Phone" @bind-Value="_bruger.Phone" class="form-control" placeholder="Telefon nummer"/>
-    </div>
-
-    <div class="col-md-12 mb-3">
-        <label for="Adress">Adresse:</label>
-        <InputText id="Adress" @bind-Value="_bruger.Address" class="form-control" placeholder="Adresse"/>
-    </div>
-
-    <div class="col-12 mb-3">
-        <button type="submit" class="btn btn-primary">Create</button>
-    </div>
-</EditForm>
-
+@if (anmodninger == null)
+{
+    <p>Henter...</p>
+}
+else if (!anmodninger.Any())
+{
+    <p>Ingen anmodninger endnu.</p>
+}
+else
+{
+    <ul>
+        @foreach (var a in anmodninger)
+        {
+            <li>
+                <b>@a.AnnonceId</b> — @a.Status — @a.Date
+            </li>
+        }
+    </ul>
+}
 
 @code {
-    Bruger _bruger = new();
-    
-    public async Task HandleValidSubmit()
+    [Parameter] public int AnnonceId { get; set; }
+    private List<Anmodning>? anmodninger = null;
+
+    protected override async Task OnInitializedAsync()
     {
-        // await http.PostAsJsonAsync("", _bike);
-        await brugerService.Add(_bruger);
-        _bruger = new(); // clear fields in form
-        navMan.NavigateTo("bruger");
-
+        anmodninger = await Http.GetFromJsonAsync<List<Anmodning>>(
+            $"http://localhost:{PASSWORD.localPort}/api/anmodning"
+        );
     }
-    
-    private string PasswordType => visPassword ? "text" : "password";
-    private bool visPassword = false;
-
-    private void ToggleAdgangskodeVisibility() => visPassword = !visPassword;
-
 }
 </file>
 
@@ -1078,119 +1081,158 @@ public class Anmodning
 }
 </file>
 
-<file path="Server/Repositories/IAnnonceRepo.cs">
+<file path="Server/Repositories/IAnnonceRepository.cs">
 using Core;
 namespace Server.Repositories;
-public interface IAnnonceRepo
+public interface IAnnonceRepository
 {
     List<Annonce> GetAll();
     void Add(Annonce annonce);
+    void Update(Annonce annonce);
+    void Delete(int id);
 }
 </file>
 
-<file path="Server/Controllers/AnnonceController.cs">
-using Core;
-using Microsoft.AspNetCore.Mvc;
-using Server.Repositories;
-namespace Server.Controllers;
-    [ApiController]
-    [Route("api/annonce")]
-    public class AnnonceController : ControllerBase
-    {
-        private IAnnonceRepository aAnnonce;
-        public AnnonceController(IAnnonceRepository aAnnonce)
-        {
-            this.aAnnonce = aAnnonce;
-        }
-        [HttpPost]
-        public void Add(Annonce annonce) 
-        {
-            aAnnonce.Add(annonce);
-        }
-        [HttpGet]
-        public IEnumerable<Annonce> GetAll() 
-        { 
-            return aAnnonce.GetAll();
-        }
-        [HttpGet("{id}")]
-        public Annonce GetById(int id)
-        {
-            return GetAll().Where(a => a.AnonnceId == id).ToList()[0];
-        }
-    }
-</file>
-
-<file path="Client/Components/AnnonceCard.razor">
+<file path="Client/Pages/OpretBruger.razor">
+@page "/addbruger"
+@using Client.Service
 @using Core
-@namespace Client.Components.AnnonceCard
+@inject HttpClient http
+@inject NavigationManager navMan
+@inject IBrugerService brugerService
 
-<article class="annonce-row" role="listitem">
-    <div class="thumb">
-        <img src="@Annonce.ImageUrl" alt="@Annonce?.Title" loading="lazy" />
+<PageTitle>Add User</PageTitle>
+
+<h3>Add User</h3>
+
+<EditForm Model="@_bruger" class="row p-3" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="col-md-12 mb-3">
+        <label for="Name">Navn:</label>
+        <InputText id="Name" @bind-Value="_bruger.Name" class="form-control" placeholder="Navn"/>
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Email">Email:</label>
+        <InputText id="Email" @bind-Value="_bruger.Email" class="form-control" placeholder="Email"/>
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="pwd">Adgangskode:</label>
+        <InputText id="pwd"
+                   type="@PasswordType"
+                   class="form-control"
+                   @bind-Value="_bruger.Password"
+                   placeholder="Adgangskode"/>
+        <i class="bi bi-eye" @onclick="ToggleAdgangskodeVisibility"></i>
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Phone">Telefon nummer:</label>
+        <InputText id="Phone" @bind-Value="_bruger.Phone" class="form-control" placeholder="Telefon nummer"/>
     </div>
 
-    <div class="content">
-        <h3 class="title">@Annonce?.Title</h3>
-
-        <div class="subtitle">
-            <span class="where">Marked</span>
-            <span class="price">til salg @Annonce?.Price.ToString("N0") kr.</span>
-        </div>
+    <div class="col-md-12 mb-3">
+        <label for="Adress">Adresse:</label>
+        <InputText id="Adress" @bind-Value="_bruger.Address" class="form-control" placeholder="Adresse"/>
     </div>
 
-    <div class="actions">
-        <button class="btn mark-sold" @onclick="OnClickSeeRequest">Se anmodninger</button>
-
-        <!-- simpel dropdown: tabindex + onblur lukker ved klik udenfor -->
-        <div class="rd-wrapper" tabindex="0" @onblur="CloseMenu">
-            <button class="rd-btn" @onclick="Toggle">@ButtonText</button>
-
-            @if (open)
-            {
-                <div class="rd-menu" @onclick:stopPropagation>
-                    <button class="rd-item" @onclick="Edit">Rediger</button>
-                    <button class="rd-item rd-delete" @onclick="Delete">Slet</button>
-                </div>
-            }
-        </div>
+    <div class="col-12 mb-3">
+        <button type="submit" class="btn btn-primary">Opret</button>
     </div>
-</article>
+</EditForm>
+
 
 @code {
-    [Parameter] public Annonce Annonce { get; set; } = default!;
-    [Parameter] public EventCallback OnEdit { get; set; }
-    [Parameter] public EventCallback OnDelete { get; set; }
-    [Parameter] public EventCallback OnSeeRequests { get; set; }
-
-    private bool open = false;
-    private string ButtonText => "…";
-
-    private void Toggle()
+    Bruger _bruger = new();
+    
+    public async Task HandleValidSubmit()
     {
-        open = !open;
-    }
+        // await http.PostAsJsonAsync("", _bike);
+        await brugerService.Add(_bruger);
+        _bruger = new(); // clear fields in form
+        navMan.NavigateTo("bruger");
 
-    private void CloseMenu(FocusEventArgs _)
-    {
-        open = false;
     }
+    
+    private string PasswordType => visPassword ? "text" : "password";
+    private bool visPassword = false;
 
-    async Task Edit()
-    {
-        open = false;
-        if (OnEdit.HasDelegate) await OnEdit.InvokeAsync(null);
-    }
+    private void ToggleAdgangskodeVisibility() => visPassword = !visPassword;
 
-    async Task Delete()
-    {
-        open = false;
-        if (OnDelete.HasDelegate) await OnDelete.InvokeAsync(null);
-    }
+}
+</file>
 
-    private async void OnClickSeeRequest()
+<file path="Server/Repositories/AnnonceRepositoryMongoDb.cs">
+using MongoDB.Driver;
+using Core;
+using Server.PW1;
+namespace Server.Repositories;
+public class AnnonceRepositoryMongoDb : IAnnonceRepository
+{
+    private readonly IMongoCollection<Annonce> aAnnonce;
+    public AnnonceRepositoryMongoDb()
     {
-        
+        var mongoUri = $"mongodb+srv://tobiaskring111_db_user:{PASSWORD.superHemligPassword}@dbtest.adqud16.mongodb.net/";
+        var client = new MongoClient(mongoUri);
+        var database = client.GetDatabase("Genbrug");
+        aAnnonce = database.GetCollection<Annonce>("Annonce");
     }
+    public List<Annonce> GetAll()
+    {
+        return aAnnonce.Find(_  => true).ToList();
+    }
+    public void Add(Annonce annonce)
+    {
+        var lastAnnonce = aAnnonce
+            .Find(Builders<Annonce>.Filter.Empty)
+            .SortByDescending(a => a.AnonnceId)
+            .Limit(1)
+            .FirstOrDefault();
+        annonce.AnonnceId = (lastAnnonce?.AnonnceId ?? 0) + 1;
+        aAnnonce.InsertOne(annonce);
+    }
+    public void Update(Annonce annonce)
+    {
+        // Finder det dokument i databasen, hvor AnonnceId matcher det annonce-objekt vi vil opdatere
+        var filter = Builders<Annonce>.Filter.Eq(a => a.AnonnceId, annonce.AnonnceId);
+        // Erstat det gamle dokument med det nye annonce-objekt
+        aAnnonce.ReplaceOne(filter, annonce);
+    }
+    public void Delete(int id)
+    {
+        aAnnonce.DeleteOne(a => a.AnonnceId == id);
+    }
+}
+</file>
+
+<file path="Server/Repositories/IAnmodningRepo.cs">
+using Core;
+using System.Collections.Generic;
+namespace Server.Repositories;
+public interface IAnmodningRepo
+{
+    List<Anmodning> GetAll();
+    void Add(Anmodning anmod);
+}
+</file>
+
+<file path="Core/Annonce.cs">
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+namespace Core;
+public class Annonce
+{
+    [BsonId]
+    public int AnonnceId { get; set; }
+    public int BrugerId { get; set; }
+    public string? Title { get; set; } 
+    public string? Description { get; set; } 
+    public double Price { get; set; }
+    public string? Category { get; set; } 
+    public string? Status { get; set; } 
+    public string? ImageUrl { get; set; } 
+    public int SælgerId { get; set; }
+    public string? Location { get; set; } 
+    public List<Anmodning>? Anmodninger { get; set; }
 }
 </file>
 
@@ -1225,7 +1267,7 @@ namespace Server.Controllers;
 
     @if (Annoncer.Count == 0)
     {
-      <p>No products</p>
+      <p>Ingen produkter</p>
     }
     else
     {
@@ -1255,201 +1297,6 @@ namespace Server.Controllers;
     {
       SelectedCategory = cat;
     }
-    
-    /*private List<Annonce> Annoncer = new()
-    {
-      new Annonce
-      {
-        AnonnceId = 1,
-        Title = "GO PRIS FOR HURTIG HANDEL. 2 IKEA Småstad...",
-        Description = "Kort beskrivelse — stand, mål eller andet.",
-        ImageUrl = "https://m.media-amazon.com/images/I/91TjRnsruRL._AC_UF350,350_QL80_.jpg",
-        Price = 800,
-        Category = "Møbler",
-        Status = "Aktiv",
-        SælgerId = 3,
-        BrugerId = 3,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      },
-      new Annonce
-      {
-        AnonnceId = 2,
-        Title = "Komplet sort stålskorssten rør og tilbehør",
-        Description = "Kort beskrivelse.",
-        ImageUrl = "https://jyskpejsecenter.dk/wp-content/uploads/2024/10/5.jpg",
-        Price = 5300,
-        Category = "Have",
-        Status = "Aktiv",
-        SælgerId = 4,
-        BrugerId = 4,
-        Location = "SH-A1.06"
-      }
-    };*/
-}
-</file>
-
-<file path="Server/Repositories/IAnmodningRepo.cs">
-using Core;
-using System.Collections.Generic;
-namespace Server.Repositories;
-public interface IAnmodningRepo
-{
-    List<Anmodning> GetAll();
-    void Add(Anmodning anmod);
-}
-</file>
-
-<file path="Server/Repositories/MongoDb.cs">
-//using MongoDB.Driver;
-//using Core;
-//namespace Server.Repositories;
-//public class MongoDb
-//{
-//    private readonly IMongoDatabase _db;
-//    public IMongoCollection<Anmodning> Anmodninger => _db.GetCollection<Anmodning>("Anmodninger");
-//    public MongoDb()
-//    {
-//        var client = new MongoClient("mongodb://localhost:27017");
-//        _db = client.GetDatabase("GenbrugsMarked"); 
-//    }
-//}
-</file>
-
-<file path="Core/Annonce.cs">
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-namespace Core;
-public class Annonce
-{
-    [BsonId]
-    public int AnonnceId { get; set; }
-    public int BrugerId { get; set; }
-    public string? Title { get; set; } 
-    public string? Description { get; set; } 
-    public double Price { get; set; }
-    public string? Category { get; set; } 
-    public string? Status { get; set; } 
-    public string? ImageUrl { get; set; } 
-    public int SælgerId { get; set; }
-    public string? Location { get; set; } 
-    public List<Anmodning>? Anmodninger { get; set; }
 }
 </file>
 
@@ -1513,53 +1360,129 @@ public class AnmodningsRepository : IAnmodningRepo
 }
 </file>
 
-<file path="Client/Pages/MineAnnoncerPage.razor">
-@page "/annoncer"
-@using Client.PW1
+<file path="Client/Components/AnnonceCard.razor">
+@using Core
 @inject NavigationManager Nav
-@using Client.Components
-@using Client.Components.AnnonceCard
-@using Core;
-@using PW1
-@inject HttpClient http
+@namespace Client.Components.AnnonceCard
 
+<article class="annonce-row" role="listitem">
+    <div class="thumb">
+        <img src="@Annonce.ImageUrl" alt="@Annonce?.Title" loading="lazy" />
+    </div>
 
-<h3>Mine annoncer</h3>
+    <div class="content">
+        <h3 class="title">@Annonce?.Title</h3>
 
-<button class="btn btn-primary" @onclick="GoToTilføjAnnoncePage"> 
-	Opret Ny Annonce
-</button>
+        <div class="subtitle">
+            <span class="where">Marked</span>
+            <span class="price">til salg @Annonce?.Price.ToString("N0") kr.</span>
+        </div>
+    </div>
 
-@if (annoncer.Count == 0 )
-{
-	<p>No products</p>
-}
-else
-{
-	<div class="d-flex flex-wrap">
-		@foreach(var p in annoncer)
-		{
-			<AnnonceCard Annonce="p"/>
-		}
-	</div>
-}
+    <div class="actions">
+        <button class="btn mark-sold" @onclick="OnClickSeeRequest">Se anmodninger</button>
+
+        <!-- simpel dropdown: tabindex + onblur lukker ved klik udenfor -->
+        <div class="rd-wrapper" tabindex="0" @onblur="CloseMenu">
+            <button class="rd-btn" @onclick="Toggle">@ButtonText</button>
+
+            @if (open)
+            {
+                <div class="rd-menu" @onclick:stopPropagation>
+                    <button class="rd-item" @onclick="Edit">Rediger</button>
+                    <button class="rd-item rd-delete" @onclick="Delete">Slet</button>
+                </div>
+            }
+        </div>
+    </div>
+</article>
 
 @code {
+    [Parameter] public Annonce Annonce { get; set; } = default!;
+    [Parameter] public EventCallback<int> OnDelete { get; set; }
+    [Parameter] public EventCallback OnSeeRequests { get; set; }
 
-	private List<Annonce> annoncer = new();
+    private bool open = false;
+    private string ButtonText => "…";
 
-	protected override async Task OnInitializedAsync()
-	{
-		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
-	}
-	
-	void GoToTilføjAnnoncePage()
-	{
-		Nav.NavigateTo("/TilføjAnnonce");
-	}
+    private void Toggle()
+    {
+        open = !open;
+    }
 
+    private void CloseMenu(FocusEventArgs _)
+    {
+        open = false;
+    }
 
+    async Task Edit()
+    {
+        open = false;
+        if (Annonce != null)
+        {
+            Nav.NavigateTo($"/annoncer/edit/{Annonce.AnonnceId}");
+        }
+    }
+
+    async Task Delete()
+    {
+        open = false;
+        if (OnDelete.HasDelegate) await OnDelete.InvokeAsync(Annonce.AnonnceId);
+    }
+
+    private Task OnClickSeeRequest()
+    {
+        var aid = Annonce.AnonnceId;
+            Nav.NavigateTo($"mine-anmodninger/{aid}");
+            return Task.CompletedTask;
+    }
 }
+</file>
+
+<file path="Server/Controllers/AnnonceController.cs">
+using Core;
+using Microsoft.AspNetCore.Mvc;
+using Server.Repositories;
+namespace Server.Controllers;
+    [ApiController]
+    [Route("api/annonce")]
+    public class AnnonceController : ControllerBase
+    {
+        private IAnnonceRepository aAnnonce;
+        public AnnonceController(IAnnonceRepository aAnnonce)
+        {
+            this.aAnnonce = aAnnonce;
+        }
+        [HttpPost]
+        public void Add(Annonce annonce) 
+        {
+            aAnnonce.Add(annonce);
+        }
+        [HttpGet]
+        public IEnumerable<Annonce> GetAll() 
+        { 
+            return aAnnonce.GetAll();
+        }
+        [HttpGet("{id}")]
+        public Annonce GetById(int id)
+        {
+            return GetAll().Where(a => a.AnonnceId == id).ToList()[0];
+        }
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, Annonce annonce)
+        {
+            if (annonce == null || annonce.AnonnceId != id)
+                return BadRequest();
+            aAnnonce.Update(annonce);
+            return NoContent();
+        }
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id) 
+        {
+            aAnnonce.Delete(id);
+            return Ok();
+        }
+    }
 </file>
 
 <file path="Server/Program.cs">
@@ -1594,6 +1517,63 @@ app.UseCors("policy");
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+</file>
+
+<file path="Client/Pages/MineAnnoncerPage.razor">
+@page "/annoncer"
+@using Client.PW1
+@inject NavigationManager Nav
+@using Client.Components.AnnonceCard
+@using Core;
+@inject HttpClient http
+
+
+<h3>Mine annoncer</h3>
+
+<button class="btn btn-primary" @onclick="GoToTilføjAnnoncePage"> 
+	Opret Ny Annonce
+</button>
+
+@if (annoncer.Count == 0 )
+{
+	<p>Ingen produkter</p>
+}
+else
+{
+	<div class="d-flex flex-wrap">
+		@foreach (var p in annoncer)
+		{
+			<AnnonceCard Annonce="p" OnDelete="@((id) => DeleteAnnonce(id))"/>
+		}
+	</div>
+
+}
+
+@code {
+
+	private List<Annonce> annoncer = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
+	}
+
+	private async Task DeleteAnnonce(int id)
+	{
+		await http.DeleteAsync($"http://localhost:{PASSWORD.localPort}/api/annonce/{id}");
+		
+		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
+	}
+
+
+	void GoToTilføjAnnoncePage()
+	{
+		Nav.NavigateTo("/TilføjAnnonce");
+	}
+
+
+
+}
 </file>
 
 </files>
