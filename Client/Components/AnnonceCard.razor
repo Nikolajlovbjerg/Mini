@@ -1,29 +1,98 @@
 @using Core
-
+@using PW1
+@inject NavigationManager Nav
+@inject HttpClient http
 
 <div class="card m-2 p-3 shadow-sm border rounded position-relative d-flex flex-column justify-content-between"
      style="width: 260px; min-height: 420px;">
-    
+
     <div class="flex-grow-1">
         <h4 class="mt-4">@Annonce.Title</h4>
         <p><strong>Pris:</strong> @Annonce.Price kr.</p>
         <p class="description">@Annonce.Description</p>
     </div>
-    
+
     <div class="mt-auto pt-2 border-top">
         <p><strong>Kategori:</strong> @Annonce.Category</p>
-        
+        <button class="btn btn-info btn-sm" @onclick="ShowAnmodninger">
+            Se anmodninger
+        </button>
     </div>
 </div>
 
-
-
-
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Anmodninger for @Annonce.Title</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (anmodninger == null)
+                    {
+                        <p>Loading...</p>
+                    }
+                    else if (!anmodninger.Any())
+                    {
+                        <p>Ingen anmodninger.</p>
+                    }
+                    else
+                    {
+                        <ul>
+                            @foreach (var a in anmodninger)
+                            {
+                                <li>
+                                    BuyerId: @a.BuyerId - Status: @a.Status
+                                    <button class="btn btn-success btn-sm ms-2" @onclick="() => AcceptAnmodning(a.AnmodningId)">
+                                        Accepter
+                                    </button>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter]
     public Annonce Annonce { get; set; }
-    
-  
+
+    private bool showModal = false;
+    private List<Anmodning> anmodninger;
+
+    private async void ShowAnmodninger()
+    {
+        showModal = true;
+        anmodninger = await http.GetFromJsonAsync<List<Anmodning>>(
+            $"http://localhost:{PASSWORD.localPort}/api/anmodning/by-annonce/{Annonce.AnnonceId}");
+        StateHasChanged();
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+    }
+
+    private async Task AcceptAnmodning(int anmodningId)
+    {
+        var res = await http.PostAsync($"http://localhost:{PASSWORD.localPort}/api/anmodning/accepter/{anmodningId}", null);
+        if (res.IsSuccessStatusCode)
+        {
+            // Luk modal efter accept
+            showModal = false;
+
+            // Naviger automatisk til /indkøb
+            Nav.NavigateTo("/indkøb");
+        }
+        else
+        {
+            // Optional: vis fejlbesked
+            Console.WriteLine("Kunne ikke acceptere anmodning");
+        }
     }
 }

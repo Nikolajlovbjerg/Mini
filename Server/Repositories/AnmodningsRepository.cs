@@ -34,4 +34,18 @@ public class AnmodningsRepository : IAnmodningRepo
 
         _AnmodCollection.InsertOne(anmod);
     }
+
+    public List<Anmodning> GetByAnnonceId(int annonceId)
+    {
+        return _AnmodCollection.Find(a => a.AnnonceId == annonceId).ToList();
+    }
+
+    public void DeleteOtherAnmodninger(int annonceId, int acceptedAnmodningId)
+    {
+        var filter = Builders<Anmodning>.Filter.And(
+            Builders<Anmodning>.Filter.Eq(a => a.AnnonceId, annonceId),
+            Builders<Anmodning>.Filter.Ne(a => a.AnmodningId, acceptedAnmodningId)
+        );
+        _AnmodCollection.DeleteMany(filter);
+    }
 }
