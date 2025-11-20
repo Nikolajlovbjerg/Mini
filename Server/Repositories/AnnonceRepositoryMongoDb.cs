@@ -36,7 +36,9 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
     
     public void Update(Annonce annonce)
     {
+        // Finder det dokument i databasen, hvor AnonnceId matcher det annonce-objekt vi vil opdatere
         var filter = Builders<Annonce>.Filter.Eq(a => a.AnonnceId, annonce.AnonnceId);
+        // Erstat det gamle dokument med det nye annonce-objekt
         aAnnonce.ReplaceOne(filter, annonce);
     }
 

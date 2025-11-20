@@ -60,39 +60,20 @@
 
 @code {
 
-    private List<Annonce> annoncer = new();
-    
     private Annonce annonce = new();          
-    private string errorText = "";      
 
     private string[] catagories = { "--Vælg en kategori--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
     private string[] locations = { "--Vælg en kategori--", "SH-A1.06", "SH-A1.02" };
     
-    protected override async Task OnInitializedAsync()
-    {
-        annoncer = await Http.GetFromJsonAsync<List<Annonce>>("http://localhost:5044/api/annonce");
-    }
-
     private async Task OnClickAddProduct()
     {
-        errorText = "";
-        try
-        {
             var response = await Http.PostAsJsonAsync("http://localhost:5044/api/annonce", annonce);
 
             if (response.IsSuccessStatusCode)
             {
-                // clear the form after successful create
+                // Den clear formularen, så man kan lave en ny
                 annonce = new Annonce();
             }
-            else
-            {
-                errorText = $"Kunne ikke oprette bruger (status { (int)response.StatusCode }).";
-            }
-        }
-        catch
-        {
-            errorText = "Fejl ved forbindelse til API'et.";
-        }
+            
     }
 }
