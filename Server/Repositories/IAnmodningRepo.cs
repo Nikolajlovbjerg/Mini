@@ -8,4 +8,5 @@ public interface IAnmodningRepo
     List<Anmodning> GetAll();
     List<Anmodning> GetByAnnonceId(int annonceId);
     void Add(Anmodning anmod);
+    void AcceptAnmodning(int annonceId, int anmodningId);
 }

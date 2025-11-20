@@ -41,4 +41,23 @@ public class AnmodningsRepository : IAnmodningRepo
 
         _AnmodCollection.InsertOne(anmod);
     }
+    public void AcceptAnmodning(int annonceId, int anmodningId)
+    {
+        // Hent alle anmodninger for annoncen
+        var anmodninger = _AnmodCollection.Find(a => a.AnnonceId == annonceId).ToList();
+
+        foreach (var a in anmodninger)
+        {
+            if (a.AnmodningId == anmodningId)
+                a.Status = "accepteret"; // Accepter den valgte
+            else if (a.Status == "pending")
+                a.Status = "afvist"; // Afvis de andre pending
+        }
+
+        // Opdater alle ændringer tilbage i databasen
+        foreach (var a in anmodninger)
+        {
+            _AnmodCollection.ReplaceOne(x => x.AnmodningId == a.AnmodningId, a);
+        }
+    }
 }

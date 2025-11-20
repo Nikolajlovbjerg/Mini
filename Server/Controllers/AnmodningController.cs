@@ -32,4 +32,10 @@ public class AnmodningController : ControllerBase
     {
         return _AnmodCollection.GetByAnnonceId(annonceId);
     }
+
+    [HttpPut("accept/{annonceId}/{anmodningId}")]
+    public void Accept(int annonceId, int anmodningId)
+    {
+        _AnmodCollection.AcceptAnmodning(annonceId, anmodningId);
+    }
 }
