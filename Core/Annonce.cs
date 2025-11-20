@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -38,5 +39,17 @@ public class Annonce
     public string? Location { get; set; }
 
     //Liste over anmodninger relateret til annoncen
+    
+    public string? Category { get; set; } 
+    
+    public string? Status { get; set; } 
+    
+    public string? ImageUrl { get; set; }
+
+    [BsonElement("SælgerId")]
+    public int SaelgerId { get; set; }
+    
+    public string? Location { get; set; } 
+    
     public List<Anmodning>? Anmodninger { get; set; }
 }

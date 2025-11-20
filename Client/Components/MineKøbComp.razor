@@ -1,0 +1,22 @@
+@using Core
+@inject NavigationManager Nav
+@namespace Client.Components
+
+<article class="annonce-row" role="listitem">
+    <div class="thumb">
+        <img src="@Indkob.ImageUrl" alt="@Indkob?.Title" loading="lazy" />
+    </div>
+
+    <div class="content">
+        <h3 class="title">@Indkob?.Title</h3>
+
+        <div class="subtitle">
+            <span class="price">Købt for @Indkob?.Price.ToString("N0") kr.</span>
+            <span class="where">Købt den @Indkob.KobtDato</span>
+        </div>
+    </div>
+</article>
+
+@code {
+    [Parameter] public MineIndkob Indkob { get; set; }
+}
