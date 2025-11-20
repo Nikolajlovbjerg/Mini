@@ -43,9 +43,12 @@ namespace Server.Controllers;
             return NoContent();
         }
         
+
+        // Dette er en routing. Det betyder at denne metode bliver kaldt, når man laver en request gennem urlen. 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id) 
         {
+        // kalder delete metoden i vores repository, og har id som parameter. 
             aAnnonce.Delete(id);
             return Ok();
         }

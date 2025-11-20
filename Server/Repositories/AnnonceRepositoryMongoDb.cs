@@ -44,5 +44,6 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
     {
         aAnnonce.DeleteOne(a => a.AnonnceId == id);
     }
-
+    /*Dette er en delete-metode i repository’et. Den modtager et id som parameter og 
+     fortæller MongoDB at slette det dokument(annonce) i aAnnonce-collectionen, hvor AnonnceId matcher det givne id */
 }
