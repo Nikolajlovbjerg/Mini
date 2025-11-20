@@ -43,3 +43,11 @@ namespace Server.Controllers;
             return NoContent();
         }
     }
+          [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+         {
+        aAnnonce.Delete(id);
+        return Ok();
+          }
+
+}

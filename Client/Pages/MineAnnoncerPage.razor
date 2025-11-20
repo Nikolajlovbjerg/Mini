@@ -21,11 +21,12 @@
 else
 {
 	<div class="d-flex flex-wrap">
-		@foreach(var p in annoncer)
+		@foreach (var p in annoncer)
 		{
-			<AnnonceCard Annonce="p"/>
+			<AnnonceCard Annonce="p" OnDelete="@(id => DeleteAnnonce(id))" />
 		}
 	</div>
+
 }
 
 @code {
@@ -36,11 +37,21 @@ else
 	{
 		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
 	}
-	
+
+	private async Task DeleteAnnonce(int id)
+	{
+		await http.DeleteAsync($"http://localhost:{PASSWORD.localPort}/api/annonce/{id}");
+
+		// Opdater liste på siden
+		annoncer = await http.GetFromJsonAsync<List<Annonce>>($"http://localhost:{PASSWORD.localPort}/api/annonce");
+	}
+
+
 	void GoToTilføjAnnoncePage()
 	{
 		Nav.NavigateTo("/TilføjAnnonce");
 	}
+
 
 
 }

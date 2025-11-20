@@ -1,6 +1,7 @@
 @page "/mine-anmodninger"
 @inject HttpClient Http
 @using Core;
+@using PW1
 
 <h3>Mine Anmodninger</h3>
 
@@ -30,7 +31,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         anmodninger = await Http.GetFromJsonAsync<List<Anmodning>>(
-            "http://localhost:5044/api/anmodning"
+            $"http://localhost:{PASSWORD.localPort}/api/anmodning"
         );
     }
 }

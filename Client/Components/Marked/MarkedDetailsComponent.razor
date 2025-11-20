@@ -1,4 +1,6 @@
 @using Core
+@using PW1
+@inject HttpClient http
 
 <div class="product-detail container-xl">
   
@@ -21,7 +23,7 @@
         }
       </div>
       <div class="actions">
-        <button class="btn primary" @onclick="OnSendMessage">Andmod om køb</button>
+        <button class="btn primary" @onclick="() => OnSendMessage(Annonce)">Andmod om køb</button>
       </div>
       <dl class="meta-list">
         <dt>Sælger</dt><dd>@Annonce?.SælgerId</dd>
@@ -31,17 +33,30 @@
     </aside>
   }
 </div >
-      
+    
+    
+    
 
-  @code {
+@code {
     [Parameter] public Annonce? Annonce { get; set; }
+    private List<Anmodning> mineAnmodninger = new();
 
-    
-    
 
-    private void OnSendMessage()
+
+
+    private async Task OnSendMessage(Annonce annonce)
     {
-        Console.WriteLine($"Send besked for annonce {Annonce?.AnonnceId}");
+        var req = new Anmodning
+            {
+                BrugerId = 1,
+                AnnonceId = annonce.AnonnceId,
+                Date = DateTime.UtcNow,
+                Status = "pending"
+            };
+
+            await http.PostAsJsonAsync($"http://localhost:{PASSWORD.localPort}/api/anmodning", req);
+            mineAnmodninger.Add(req);
+
     }
 
    

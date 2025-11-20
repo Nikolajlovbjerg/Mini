@@ -39,4 +39,10 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
         var filter = Builders<Annonce>.Filter.Eq(a => a.AnonnceId, annonce.AnonnceId);
         aAnnonce.ReplaceOne(filter, annonce);
     }
+
+    public void Delete(int id)
+    {
+        aAnnonce.DeleteOne(a => a.AnonnceId == id);
+    }
+
 }
