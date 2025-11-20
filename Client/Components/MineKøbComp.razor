@@ -1,4 +1,5 @@
 @using Core
+@inject NavigationManager Nav
 @namespace Client.Components
 
 <article class="annonce-row" role="listitem">
@@ -10,13 +11,12 @@
         <h3 class="title">@Indkob?.Title</h3>
 
         <div class="subtitle">
-            <span class="where">Marked</span>
-            <span class="price">til salg @Indkob?.Price.ToString("N0") kr.</span>
+            <span class="price">Købt for @Indkob?.Price.ToString("N0") kr.</span>
+            <span class="where">Købt den @Indkob.KobtDato</span>
         </div>
     </div>
 </article>
 
 @code {
-    [Parameter] public MineIndkob Indkob { get; set; } = null;
-    
+    [Parameter] public MineIndkob Indkob { get; set; }
 }
