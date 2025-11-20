@@ -1,0 +1,36 @@
+@page "/mine-anmodninger"
+@inject HttpClient Http
+@using Core;
+
+<h3>Mine Anmodninger</h3>
+
+@if (anmodninger == null)
+{
+    <p>Henter...</p>
+}
+else if (!anmodninger.Any())
+{
+    <p>Ingen anmodninger endnu.</p>
+}
+else
+{
+    <ul>
+        @foreach (var a in anmodninger)
+        {
+            <li>
+                <b>@a.AnnonceId</b> — @a.Status — @a.Date
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Anmodning>? anmodninger;
+
+    protected override async Task OnInitializedAsync()
+    {
+        anmodninger = await Http.GetFromJsonAsync<List<Anmodning>>(
+            "http://localhost:5044/api/anmodning"
+        );
+    }
+}
