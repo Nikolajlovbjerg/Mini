@@ -32,24 +32,13 @@ public class Annonce
     //URL til billede af varen i annoncen
     public string? ImageUrl { get; set; }
 
+    [BsonElement("SælgerId")]
     //Id på sælgeren af varen i annoncen
-    public int SælgerId { get; set; }
+    public int SaelgerId { get; set; }
 
     //Lokation for varen i annoncen, Så man ved hvor den befinder sig
     public string? Location { get; set; }
 
     //Liste over anmodninger relateret til annoncen
-    
-    public string? Category { get; set; } 
-    
-    public string? Status { get; set; } 
-    
-    public string? ImageUrl { get; set; }
-
-    [BsonElement("SælgerId")]
-    public int SaelgerId { get; set; }
-    
-    public string? Location { get; set; } 
-    
     public List<Anmodning>? Anmodninger { get; set; }
 }
