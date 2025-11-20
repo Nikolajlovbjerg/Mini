@@ -3,30 +3,32 @@
 @inject NavigationManager Nav
 @using Client.Components
 @using Core;
+@using PW1
 @inject HttpClient http
 
 
 <h3>Mine annoncer</h3>
 @if (annoncer.Count == 0 )
 {
-	<p>No products</p>
+    <p>No products</p>
 }
 else
 {
-	<div class="d-flex flex-wrap">
-		@foreach(var p in annoncer)
-		{
-			<AnnonceCard Annonce="p"/>
-		}
-	</div>
+    <div class="d-flex flex-wrap">
+        @foreach(var p in annoncer)
+        {
+            <AnnonceCard Annonce="p"/>
+        }
+    </div>
 }
 <button class="btn btn-primary" @onclick="GoToTilføjAnnoncePage"> 
-	Opret Ny Annonce
+    Opret Ny Annonce
 </button>
+
 
 @code {
 
-	private List<Annonce> annoncer = new();
+    private List<Annonce> annoncer = new();
 
 	protected override async Task OnInitializedAsync()
 	{
