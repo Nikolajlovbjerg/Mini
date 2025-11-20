@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -20,9 +21,10 @@ public class Annonce
     
     public string? Status { get; set; } 
     
-    public string? ImageUrl { get; set; } 
-    
-    public int SælgerId { get; set; }
+    public string? ImageUrl { get; set; }
+
+    [BsonElement("SælgerId")]
+    public int SaelgerId { get; set; }
     
     public string? Location { get; set; } 
     

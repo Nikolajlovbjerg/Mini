@@ -14,6 +14,7 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
         var client = new MongoClient(mongoUri);
         var database = client.GetDatabase("Genbrug");
         aAnnonce = database.GetCollection<Annonce>("Annonce");
+        //Henter informationen som DB skal bruge som navn på DB og Navn på Collection og con string
     }
 
     public List<Annonce> GetAll()
@@ -32,19 +33,35 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
         annonce.AnonnceId = (lastAnnonce?.AnonnceId ?? 0) + 1;
 
         aAnnonce.InsertOne(annonce);
+
+        //Ingen filter henter alle documenter
+        //Sorter dem så den med højste id kommer først
+        //Vælger kun den første 
+        //Retunere enten det dokument der blev fundet eller null
+        //Øger id værdien med 1 så der altid vil være et nyt id
+        //Indsætter den i dokumentet
+
+        //Bruges til at fjerne object string uden problemer for nu
     }
-    
+
     public void Update(Annonce annonce)
     {
         // Finder det dokument i databasen, hvor AnonnceId matcher det annonce-objekt vi vil opdatere
         var filter = Builders<Annonce>.Filter.Eq(a => a.AnonnceId, annonce.AnonnceId);
         // Erstat det gamle dokument med det nye annonce-objekt
         aAnnonce.ReplaceOne(filter, annonce);
+
+        //Finder det dokument hvor det id der er i DB matcher det id du vil opdatere/ændre på
+        //Og så ændre hele dokumentet med objektet 
     }
 
     public void Delete(int id)
     {
         aAnnonce.DeleteOne(a => a.AnonnceId == id);
+
+        //...aAnnonce er = IMongoCllection<...> //Collectionen\\
+        // DeleteOne finder det første dokument hvor brugerid == id
+        //Så bliver det slettet
     }
     /*Dette er en delete-metode i repository’et. Den modtager et id som parameter og 
      fortæller MongoDB at slette det dokument(annonce) i aAnnonce-collectionen, hvor AnonnceId matcher det givne id */

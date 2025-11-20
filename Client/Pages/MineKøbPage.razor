@@ -1,7 +1,39 @@
 ﻿@page "/indkøb"
+@inject HttpClient Http
+@using Core
+@using PW1
+@using Client.Components
 
-<h3>MineKøbPage</h3>
+<h3>Mine køb</h3>
+
+
+@if (mineIndkob == null)
+{
+    <p>Ingen produkter</p>
+}
+else
+{
+    <div class="d-flex flex-wrap">
+        @foreach (var p in mineIndkob)
+        {
+            <MineKøbComp Indkob="p"/>
+        }
+    </div>
+
+}
+
 
 @code {
+    private List<MineIndkob>? mineIndkob;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMineIndkøb();
+    }
+
+    private async Task LoadMineIndkøb()
+    {
+        // Skift URL til det endpoint, der returnerer dine køb
+        mineIndkob = await Http.GetFromJsonAsync<List<MineIndkob>>($"http://localhost:{PASSWORD.localPort}/api/mineindkob");
+    }
 }
