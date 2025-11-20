@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IAnnonceRepository, AnnonceRepositoryMongoDb>();
 builder.Services.AddSingleton<IBrugerRepo, BrugerRepo>();
 builder.Services.AddSingleton<IAnmodningRepo, AnmodningsRepository>();
-builder.Services.AddSingleton<IMineIndkøbRepo, MineIndkøbRepository>();
+builder.Services.AddSingleton<IMineIndkÃ¸bRepo, MineIndkÃ¸bRepository>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {

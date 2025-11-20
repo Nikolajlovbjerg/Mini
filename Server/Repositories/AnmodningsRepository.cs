@@ -8,7 +8,7 @@ public class AnmodningsRepository : IAnmodningRepo
 {
     private readonly IMongoCollection<Anmodning> _AnmodCollection;
     private readonly IMongoCollection<Annonce> aAnnonce;
-    private readonly IMongoCollection<MineIndkøb> mkøb;
+    private readonly IMongoCollection<MineIndkÃ¸b> mkÃ¸b;
 
     public AnmodningsRepository()
     {
@@ -17,7 +17,7 @@ public class AnmodningsRepository : IAnmodningRepo
         var database = client.GetDatabase("Genbrug");
         _AnmodCollection = database.GetCollection<Anmodning>("Anmodning");
         aAnnonce = database.GetCollection<Annonce>("Annonce");
-        mkøb = database.GetCollection<MineIndkøb>("mineindkøb");
+        mkÃ¸b = database.GetCollection<MineIndkÃ¸b>("mineindkï¿½b");
     }
 
     public List<Anmodning> GetAll()
@@ -58,7 +58,7 @@ public class AnmodningsRepository : IAnmodningRepo
                 a.Status = "afvist"; // Afvis de andre pending
         }
 
-        // Opdater alle ændringer tilbage i databasen
+        // Opdater alle ï¿½ndringer tilbage i databasen
         foreach (var a in anmodninger)
         {
             _AnmodCollection.ReplaceOne(x => x.AnmodningId == a.AnmodningId, a);
@@ -74,31 +74,31 @@ public class AnmodningsRepository : IAnmodningRepo
         var anmod = _AnmodCollection.Find(a => a.AnmodningId == anmodningId).FirstOrDefault();
         if (anmod == null) return;
 
-        // Opret MineIndkøb objekt
-        var mineIndkøb = new MineIndkøb
+        // Opret MineIndkï¿½b objekt
+        var mineIndkÃ¸b = new MineIndkÃ¸b
         {
             AnnonceId = annonce.AnonnceId,
-            BrugerId = anmod.BuyerId, // køberen
+            BrugerId = anmod.BuyerId, // kï¿½beren
             Title = annonce.Title,
             Description = annonce.Description,
             Price = annonce.Price,
             Category = annonce.Category,
             ImageUrl = annonce.ImageUrl,
             Location = annonce.Location,
-            SælgerId = annonce.SælgerId
+            SÃ¦lgerId = annonce.SÃ¦lgerId
         };
 
-        //Insert i MineIndkøb collection
+        //Insert i MineIndkï¿½b collection
         
 
-        // Auto-increment id (samme logik som før)
-        var last = mkøb.Find(Builders<MineIndkøb>.Filter.Empty)
-                      .SortByDescending(m => m.KøbId)
+        // Auto-increment id (samme logik som fï¿½r)
+        var last = mkÃ¸b.Find(Builders<MineIndkÃ¸b>.Filter.Empty)
+                      .SortByDescending(m => m.KÃ¸bId)
                       .Limit(1)
                       .FirstOrDefault();
-        mineIndkøb.KøbId = (last?.KøbId ?? 0) + 1;
+        mineIndkÃ¸b.KÃ¸bId = (last?.KÃ¸bId ?? 0) + 1;
 
-        mkøb.InsertOne(mineIndkøb);
+        mkÃ¸b.InsertOne(mineIndkÃ¸b);
 
         //Slet annoncen fra Annonce collection
         aAnnonce.DeleteOne(a => a.AnonnceId == annonceId);
