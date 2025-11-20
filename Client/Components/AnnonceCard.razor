@@ -36,7 +36,7 @@
 @code {
     [Parameter] public Annonce Annonce { get; set; } = default!;
     [Parameter] public EventCallback OnEdit { get; set; }
-    [Parameter] public EventCallback OnDelete { get; set; }
+    [Parameter] public EventCallback<int> OnDelete { get; set; }
     [Parameter] public EventCallback OnSeeRequests { get; set; }
 
     private bool open = false;
@@ -61,7 +61,7 @@
     async Task Delete()
     {
         open = false;
-        if (OnDelete.HasDelegate) await OnDelete.InvokeAsync(null);
+        if (OnDelete.HasDelegate) await OnDelete.InvokeAsync(Annonce.AnonnceId);
     }
 
     private async void OnClickSeeRequest()
