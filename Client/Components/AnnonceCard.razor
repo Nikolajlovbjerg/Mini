@@ -7,7 +7,6 @@
     </div>
 
     <div class="content">
-
         <h3 class="title">@Annonce?.Title</h3>
 
         <div class="subtitle">
@@ -18,21 +17,55 @@
 
     <div class="actions">
         <button class="btn mark-sold" @onclick="OnClickSeeRequest">Se anmodninger</button>
-        <button class="btn more" @onclick="OnMoreClicked" title="Flere handlinger">…</button>
+
+        <!-- simpel dropdown: tabindex + onblur lukker ved klik udenfor -->
+        <div class="rd-wrapper" tabindex="0" @onblur="CloseMenu">
+            <button class="rd-btn" @onclick="Toggle">@ButtonText</button>
+
+            @if (open)
+            {
+                <div class="rd-menu" @onclick:stopPropagation>
+                    <button class="rd-item" @onclick="Edit">Rediger</button>
+                    <button class="rd-item rd-delete" @onclick="Delete">Slet</button>
+                </div>
+            }
+        </div>
     </div>
 </article>
 
 @code {
     [Parameter] public Annonce Annonce { get; set; } = default!;
+    [Parameter] public EventCallback OnEdit { get; set; }
+    [Parameter] public EventCallback OnDelete { get; set; }
+    [Parameter] public EventCallback OnSeeRequests { get; set; }
 
-    private void OnClickSeeRequest()
+    private bool open = false;
+    private string ButtonText => "…";
+
+    private void Toggle()
+    {
+        open = !open;
+    }
+
+    private void CloseMenu(FocusEventArgs _)
+    {
+        open = false;
+    }
+
+    async Task Edit()
+    {
+        open = false;
+        if (OnEdit.HasDelegate) await OnEdit.InvokeAsync(null);
+    }
+
+    async Task Delete()
+    {
+        open = false;
+        if (OnDelete.HasDelegate) await OnDelete.InvokeAsync(null);
+    }
+
+    private async void OnClickSeeRequest()
     {
         
     }
-
-    private void OnMoreClicked()
-    {
-        
-    }
-
 }
