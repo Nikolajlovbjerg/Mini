@@ -8,7 +8,7 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="col-md-12 mb-3">
-        <label for="Titel">Titel</label>
+        <label for="Titel">Titel:</label>
         <InputText 
                 id="Name" 
                 @bind-Value="annonce.Title" 
@@ -17,12 +17,12 @@
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="Pris">Pris</label>
+        <label for="Pris">Pris:</label>
         <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control" placeholder="Indsæt Pris"/>
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="Kategori">Kategori</label>
+        <label for="Kategori">Kategori:</label>
         <InputSelect id="Category" @bind-Value="annonce.Category" class="form-control">
             @foreach (var c in catagories)
             {
@@ -32,7 +32,7 @@
     </div>
     
     <div class="col-md-6 mb-3">
-        <label for="Lokation">Lokation</label>
+        <label for="Lokation">Lokation:</label>
         <InputSelect id="Location" @bind-Value="annonce.Location" class="form-control">
             @foreach (var l in locations)
             {
@@ -42,12 +42,12 @@
     </div>
     
     <div class="col-md-6 mb-3">
-        <label for="Billede">Image</label>
+        <label for="Billede">Billede:</label>
         <InputText id="Image" @bind-Value="annonce.ImageUrl" class="form-control" placeholder="Indsæt billed URL"/>
     </div>
 
     <div class="col-md-12 mb-3">
-        <label for="Beskrivelse">Beskrivelse</label>
+        <label for="Beskrivelse">Beskrivelse:</label>
         <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control" placeholder="Indsæt beskrivelse"/>
     </div>
 
