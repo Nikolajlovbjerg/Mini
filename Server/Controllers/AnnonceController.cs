@@ -32,4 +32,11 @@ namespace Server.Controllers;
         {
             return GetAll().Where(a => a.AnonnceId == id).ToList()[0];
         }
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        aAnnonce.Delete(id);
+        return Ok();
     }
+
+}

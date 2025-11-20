@@ -33,4 +33,10 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
 
         aAnnonce.InsertOne(annonce);
     }
+
+    public void Delete(int id)
+    {
+        aAnnonce.DeleteOne(a => a.AnonnceId == id);
+    }
+
 }
