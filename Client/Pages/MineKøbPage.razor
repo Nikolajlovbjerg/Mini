@@ -7,7 +7,11 @@
 <h3>Mine Indkøb</h3>
 
 
-@if (mineIndkob == null )
+@if (mineIndkob == null)
+{
+    <p>Loader...</p>
+}
+else if (!mineIndkob.Any())
 {
     <p>Ingen produkter</p>
 }
@@ -16,10 +20,16 @@ else
     <div class="d-flex flex-wrap">
         @foreach (var p in mineIndkob)
         {
-            <MineKobComp Indkob="p"/>
+            <div class="card m-2 p-2" style="width:200px;">
+                <h5>@p.Title</h5>
+                <p>@p.Description</p>
+                <p>Pris: @p.Price</p>
+                <p>Location: @p.Location</p>
+                <p>SælgerId: @p.SaelgerId</p>
+                <p>KobtDato: @p.KobtDato.ToLocalTime()</p>
+            </div>
         }
     </div>
-
 }
 
 
