@@ -24,16 +24,22 @@ else
 
 
 @code {
+    // Liste til at gemme de køb, der hentes fra API
     private List<MineIndkob>? mineIndkob;
 
+    // Blazor-livscyklusmetode, kaldes når komponenten initialiseres
     protected override async Task OnInitializedAsync()
     {
-        await LoadMineIndkøb();
+        await LoadMineIndkøb(); // Hent køb fra backend når komponenten loader
     }
 
+    // Metode til at hente køb fra API
     private async Task LoadMineIndkøb()
     {
-        // Skift URL til det endpoint, der returnerer dine køb
-        mineIndkob = await Http.GetFromJsonAsync<List<MineIndkob>>($"http://localhost:{PASSWORD.localPort}/api/mineindkob");
+        // Sender GET-request til backend endpoint /api/mineindkob
+        // Deserialiserer JSON-respons til en List<MineIndkob>
+        mineIndkob = await Http.GetFromJsonAsync<List<MineIndkob>>(
+            $"http://localhost:{PASSWORD.localPort}/api/mineindkob"
+        );
     }
 }

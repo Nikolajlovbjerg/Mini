@@ -45,20 +45,31 @@
 
 
 @code {
+    // Opretter en instans af Bruger, som bindes til formularen
     Bruger _bruger = new();
-    
+
+    // Metode, der kaldes når formularen valideres og submit udføres
     public async Task HandleValidSubmit()
     {
-        // await http.PostAsJsonAsync("", _bike);
+        // Kalder service-laget for at tilføje den nye bruger til databasen
         await brugerService.Add(_bruger);
-        _bruger = new(); // clear fields in form
-        navMan.NavigateTo("bruger");
 
+        // Nulstiller formularens felter efter indsættelse
+        _bruger = new();
+
+        // Navigerer brugeren til siden "bruger" efter submit
+        navMan.NavigateTo("bruger");
     }
-    
+
+    // Returnerer typen af password-input feltet afhængigt af visPassword
+    // Hvis visPassword er true → input type er "text" (synlig password)
+    // Hvis visPassword er false → input type er "password" (skjult)
     private string PasswordType => visPassword ? "text" : "password";
+
+    // Variabel til at holde styr på om password skal vises
     private bool visPassword = false;
 
+    // Metode der toggler visPassword variablen
+    // Bruges fx til at vise/skjule password når brugeren klikker på et ikon
     private void ToggleAdgangskodeVisibility() => visPassword = !visPassword;
-
 }
