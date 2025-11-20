@@ -10,12 +10,16 @@
     <ValidationSummary />
     <div class="col-md-12 mb-3">
         <label for="Name">Name</label>
-        <InputText id="Name" @bind-Value="annonce.Title" class="form-control"/>
+        <InputText 
+                id="Name" 
+                @bind-Value="annonce.Title" 
+                class="form-control"
+                placeholder="Insert Name"/>
     </div>
 
     <div class="col-md-6 mb-3">
         <label for="Price">Price</label>
-        <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control"/>
+        <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control" placeholder="Insert Price"/>
     </div>
 
     <div class="col-md-6 mb-3">
@@ -37,10 +41,15 @@
             }
         </InputSelect>
     </div>
+    
+    <div class="col-md-6 mb-3">
+        <label for="Name">Image</label>
+        <InputText id="Image" @bind-Value="annonce.ImageUrl" class="form-control" placeholder="Insert Image URL"/>
+    </div>
 
     <div class="col-md-12 mb-3">
         <label for="Description">Description</label>
-        <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control"/>
+        <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control" placeholder="Insert Description"/>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-3">
@@ -57,8 +66,8 @@
     private Annonce annonce = new();          
     private string errorText = "";      
 
-    private string[] catagories = { "--Vælg en kategori--", "Elektronik", "Bil", "Møbler", "Tøj", "Kunst", "Have" };
-    private string[] locations = { "--Vælg et lokale--", "SH-A1.06", "SH-A1.02" };
+    private string[] catagories = { "--Choose a category--", "Elektronik", "Bil", "Møbler", "Tøj", "Kunst", "Have" };
+    private string[] locations = { "--Choose a location--", "SH-A1.06", "SH-A1.02" };
     
     protected override async Task OnInitializedAsync()
     {
