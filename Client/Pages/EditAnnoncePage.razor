@@ -57,7 +57,7 @@ else
         </div>
 
         <div class="col-12 mb-3">
-            <button type="submit" class="btn btn-primary">Gem ændringer</button>
+            <button type="submit" class="opretbtn">Gem ændringer</button>
             <button type="button" class="btn btn-secondary ms-2" @onclick="Cancel">Annuller</button>
         </div>
     </EditForm>
@@ -68,8 +68,8 @@ else
 
     private Annonce? annonce;
     
-    private string[] _catagories = { "--Choose a category--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
-    private string[] _locations = { "--Choose a location--", "SH-A1.06", "SH-A1.02" };
+    private string[] _catagories = { "--Vælg en kategori--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
+    private string[] _locations = { "--Vælg en lokation--", "SH-A1.06", "SH-A1.02" };
 
     protected override async Task OnInitializedAsync()
     {
