@@ -1,0 +1,98 @@
+@page "/annoncer/edit/{AnnonceId:int}"
+@using Core
+@inject HttpClient http
+@inject NavigationManager Nav
+@using Client.PW1
+
+<h1>Rediger annonce</h1>
+
+@if (annonce == null)
+{
+    <p>Henter annonce...</p>
+}
+else
+{
+    <EditForm Model="@annonce" OnValidSubmit="HandleSubmit" class="row p-3">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="col-md-12 mb-3">
+            <label for="Title">Titel</label>
+            <InputText id="Title" @bind-Value="annonce.Title" class="form-control" />
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label for="Description">Beskrivelse</label>
+            <InputTextArea id="Description" @bind-Value="annonce.Description" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Price">Pris</label>
+            <InputNumber id="Price" @bind-Value="annonce.Price" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Price">Category</label>
+            <InputSelect id="Category" @bind-Value="annonce.Category" class="form-control">
+                @foreach (var c in _catagories)
+                {
+                    <option value="@c">@c</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Price">Location</label>
+            <InputSelect id="Location" @bind-Value="annonce.Location" class="form-control">
+                @foreach (var l in _locations)
+                {
+                    <option value="@l">@l</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="ImageUrl">Image URL</label>
+            <InputText id="ImageUrl" @bind-Value="annonce.ImageUrl" class="form-control" />
+        </div>
+
+        <div class="col-12 mb-3">
+            <button type="submit" class="btn btn-primary">Gem ændringer</button>
+            <button type="button" class="btn btn-secondary ms-2" @onclick="Cancel">Annuller</button>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int AnnonceId { get; set; }
+
+    private Annonce? annonce;
+    
+    private string[] _catagories = { "--Choose a category--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
+    private string[] _locations = { "--Choose a location--", "SH-A1.06", "SH-A1.02" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        annonce = await http.GetFromJsonAsync<Annonce>($"http://localhost:{PASSWORD.localPort}/api/annonce/{AnnonceId}");
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (annonce == null) return;
+        
+        var res = await http.PutAsJsonAsync($"http://localhost:{PASSWORD.localPort}/api/annonce/{AnnonceId}", annonce);
+        if (res.IsSuccessStatusCode)
+        {
+            Nav.NavigateTo("/annoncer");
+        }
+        else
+        {
+            Console.WriteLine($"Fejl ved opdatering: {(int)res.StatusCode}");
+        }
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/annoncer");
+    }
+}

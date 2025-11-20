@@ -33,4 +33,10 @@ public class AnnonceRepositoryMongoDb : IAnnonceRepository
 
         aAnnonce.InsertOne(annonce);
     }
+    
+    public void Update(Annonce annonce)
+    {
+        var filter = Builders<Annonce>.Filter.Eq(a => a.AnonnceId, annonce.AnonnceId);
+        aAnnonce.ReplaceOne(filter, annonce);
+    }
 }

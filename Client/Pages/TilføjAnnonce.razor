@@ -1,7 +1,6 @@
 @page "/TilføjAnnonce"
 @using Core
 @inject HttpClient Http
-@using Client.Components
 
 <h3>TilføjAnnonce</h3>
 
@@ -66,7 +65,7 @@
     private Annonce annonce = new();          
     private string errorText = "";      
 
-    private string[] catagories = { "--Choose a category--", "Elektronik", "Bil", "Møbler", "Tøj", "Kunst", "Have" };
+    private string[] catagories = { "--Choose a category--", "Elektronik", "Sport", "Møbler", "Tøj & mode", "Kunst", "Have", "Bøger", "Bolig/Reno" };
     private string[] locations = { "--Choose a location--", "SH-A1.06", "SH-A1.02" };
     
     protected override async Task OnInitializedAsync()

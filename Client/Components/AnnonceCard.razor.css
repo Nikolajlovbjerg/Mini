@@ -23,7 +23,7 @@
 .thumb {
     width: 96px;
     height: 96px;
-    border-radius: 8px;
+    border-radius: 5px;
     overflow: hidden;
     background: #fafafa;
     box-shadow: 0 6px 18px rgba(19,22,33,0.03);
@@ -90,8 +90,8 @@
 }
 .btn.mark-sold {
     background:#fff;
-    color:#3b66f0;
-    border:1px solid rgba(59,102,240,0.18);
+    color: #0e4900;
+    border:1px solid rgb(14, 73, 0);
     padding:8px 14px;
 }
 

@@ -1,4 +1,5 @@
 @using Core
+@inject NavigationManager Nav
 @namespace Client.Components.AnnonceCard
 
 <article class="annonce-row" role="listitem">
@@ -35,7 +36,6 @@
 
 @code {
     [Parameter] public Annonce Annonce { get; set; } = default!;
-    [Parameter] public EventCallback OnEdit { get; set; }
     [Parameter] public EventCallback OnDelete { get; set; }
     [Parameter] public EventCallback OnSeeRequests { get; set; }
 
@@ -55,7 +55,10 @@
     async Task Edit()
     {
         open = false;
-        if (OnEdit.HasDelegate) await OnEdit.InvokeAsync(null);
+        if (Annonce != null)
+        {
+            Nav.NavigateTo($"/annoncer/edit/{Annonce.AnonnceId}");
+        }
     }
 
     async Task Delete()

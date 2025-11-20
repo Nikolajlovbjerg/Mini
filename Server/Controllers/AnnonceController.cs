@@ -32,4 +32,14 @@ namespace Server.Controllers;
         {
             return GetAll().Where(a => a.AnonnceId == id).ToList()[0];
         }
+        
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, Annonce annonce)
+        {
+            if (annonce == null || annonce.AnonnceId != id)
+                return BadRequest();
+
+            aAnnonce.Update(annonce);
+            return NoContent();
+        }
     }
